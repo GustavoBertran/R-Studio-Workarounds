@@ -2,20 +2,15 @@
 title: "Introduction to R for Biologists"
 author: "Gustavo Bertrán"
 subtitle: "Master's Student"
-date: "`r format(Sys.time(), '%Y-%m-%d %H:%M:%S')`"
-output:
-  prettydoc::html_pretty:
-    theme: cayman
-    highlight: github
-
+date: "8/28/2025"
+output: distill::distill_article
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-  
+*Last updated:* `r format(Sys.time(), "%Y-%m-%d %H:%M:%S")`  
 
-# This is me
 
 
 ![My profile pic](C:/Users/gbert/OneDrive/Documents/Intro R/Profile_Pic.jpg)<br><br> 
