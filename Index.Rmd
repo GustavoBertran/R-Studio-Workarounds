@@ -4,8 +4,9 @@ subtitle: "Master's Student"
 author: "Gustavo Bertrán"
 date: "`r format(Sys.time(), '%Y-%m-%d %H:%M:%S')`"
 output:
-  html_document: 
-    theme: darkly
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
 
 ---
 
