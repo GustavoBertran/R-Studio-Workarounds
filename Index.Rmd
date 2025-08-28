@@ -2,9 +2,10 @@
 title: "Introduction to R for Biologists"
 subtitle: "Master's Student"
 author: "Gustavo Bertrán"
-date: "8/28/2025"
-last_updated: "`r format(Sys.time(), '%Y-%m-%d %H:%M:%S')`"
-output: distill::distill_article
+date: "`r format(Sys.time(), '%Y-%m-%d %H:%M:%S')`"
+output:
+  html_document: 
+    theme: darkly
 
 ---
 
