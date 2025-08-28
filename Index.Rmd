@@ -1,0 +1,17 @@
+---
+title: "Introduction to R for Biologists"
+subtitle: "Master's Student"
+author: "Gustavo Bertrán"
+date: "8/28/2025"
+last_updated: "`r format(Sys.time(), '%Y-%m-%d %H:%M:%S')`"
+output: distill::distill_article
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+*Last updated:* `r format(Sys.time(), "%Y-%m-%d %H:%M:%S")`  
+
+![My profile pic](C:/Users/gbert/OneDrive/Documents/Intro R/Profile_Pic.jpg)<br><br> 
+<img src="C:/Users/gbert/OneDrive/Documents/Intro R/Profile_Pic.jpg" width="1080" height="25" />  
