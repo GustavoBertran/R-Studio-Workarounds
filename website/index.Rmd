@@ -17,4 +17,4 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # R Projects
 
-[Homework 1](C:/Users/gbert/OneDrive/Documents/Intro R/Project R/R-Studio-Workarounds/assignments/homework1/project1.Rmd)
+[Homework 1](C:/Users/gbert/OneDrive/Documents/Intro R/Project R/R-Studio-Workarounds/assignments/homework1/project1.html)

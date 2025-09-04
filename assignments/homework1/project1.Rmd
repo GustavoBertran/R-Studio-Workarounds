@@ -10,87 +10,132 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-# Practica 1  (spacing)
+Instructions / Instrucciones generales
+This assignment consists of 10 questions, each worth 10 points.
+(Esta tarea consta de 10 preguntas, cada una vale 10 puntos.)
 
-Luego de probar varios output formats los mas sencillos son los de html pretty o simplemente html document. <br> Intenté distill pero su limitacion es que no se puede poner la hora la cual se hizo el trabajo y como es requerido para la clase no la puedo utilizar.
+Write your answers in R code chunks whenever applicable.
+(Escribe tus respuestas en chunks de R cuando sea aplicable.)
 
-## Practica de headers (**Bold** e *Italics*)
-Para esta prueba voy a tratar *los distintos formatos de palabras*. En esta otra oracion **utilizare dos asteriscos**. Y para la ultima utilizare ***tres asteriscos***
+Make sure your code runs without errors. Include comments if necessary.
+(Asegúrate de que tu código se ejecute sin errores. Incluye comentarios si es necesario.)
 
-## Practica de listas
-- Programas que se utilizar
-  *  R (Un poco)
-  *  Ugene (un poco)
-- Programas que nose usar pero quiero
-  *  Python
-  *  Julia
-  *  C++
-  
-## Hacer un to-do list
-1. Aprender todo sobre Rmd
-   - Ahora mismo se muy poco
-  
-2. Hacer mi proyecto del semestre
-   - Ya creo que tengo una idea de que hacer
-3. Hacer mi propuesta
-    - Empezar es la peor parte
+For questions about chunk options, experiment with the options and write down your observations.
+(Para preguntas sobre opciones de chunks, experimenta con ellas y escribe tus observaciones.)
 
-## Como poner un link
-[Portal Viejo](https://home.uprm.edu)  
-[Portal nuevo](htpps://portal.upr.edu)  
-[My personal Github](https://github.com/GustavoBertran)
+Submit the assignment on your personal webpages using the HTML file exported/knit from the .Rmd.
+Do not copy output screenshots unless requested.
+(Entrega la tarea en tus páginas personales usando el archivo HTML generado/kniteado desde el .Rmd.
+No copies capturas de pantalla del resultado a menos que se indique.)
 
-## Como incluir una imagen
-![My profile pic](C:/Users/gbert/OneDrive/Documents/Intro R/Profile_Pic.jpg)<br><br> 
-<img src="C:/Users/gbert/OneDrive/Documents/Intro R/Profile_Pic.jpg" width="1080" height="25" />  
+
+
+
+
+Assigning values
+**Q1. Create an object called height with the value 175. Print it. (Crea un objeto llamado height con el valor 175. Muéstralo en pantalla.)**
+
+```{r}
+height <- 175
+height
+```
+
+Simple math
+**Q2. Calculate the result of 25 * 4 - 10. (Calcula el resultado de 25 * 4 - 10.)**
+```{r}
+25*4 - 10
+```
+
+
+
+
+Using functions
+**Q3. Use the function sqrt() to calculate the square root of 81. (Usa la función sqrt() para calcular la raíz cuadrada de 81.)**
+
+```{r}
+sqrt(81)
+```
+
+
+
+Character objects
+**Q4. Assign the phrase “R is fun!” to an object called message. Print it. (Asigna la frase “R is fun!” a un objeto llamado message. Muéstralo.)**
 
 
 ```{r}
-knitr::include_graphics("C:/Users/gbert/OneDrive/Documents/Intro R/Profile_Pic.jpg")
+message <- "R is fun!"
+message
 ```
 
-## Creando una tabla
-| Mentores (PI's)| Clara Isaza     | Alex Veglia  | Undergrad     |
-|----------------|-----------------:|:--------------:|---------------|
-|Estudiantes     | Gustavo, Natalia| Alan, Muchos | 2 estudiantes |
 
-## código
-
-`Ropez` es un codigo `inline`
-
-## chunks de código
+Object manipulation
+**Q5. Create two objects a <- 10 and b <- 5. Calculate their sum and store it in c. (Crea dos objetos a <- 10 y b <- 5. Calcula su suma y guárdala en c.)**
 ```{r}
-model <- lm(mpg ~ wt, data = mtcars)
-summary(model)
+a <- 10
+b <- 5
+a + b
+c <- 15
+c
 ```
 
-## Chunk options
-**include=FALSE** corre el codigo pero esconde el codigo y los resultados  
-**echo=FALSE** corre codigo y muestra resulatado  
-**message=FALSE** esconde mensajes que salgan en el output  
-**warning=FALSE** esconde warnings que salgan en el output  
 
-### include=FALSE
 
-```{r,include=FALSE}
-model <- lm(mpg ~ wt, data = mtcars)
-summary(model)
-```
-<br>
 
-### echo=FALSE
-<br>
-```{r,echo=FALSE}
-model <- lm(mpg ~ wt, data = mtcars)
-summary(model)
+Logical comparison
+**Q6. Test whether 15 is greater than 20. (Verifica si 15 es mayor que 20.)**
+
+```{r}
+15>20
 ```
 
-### warning=FALSE
-```{r,warning=FALSE}
-model <- lm(mpg ~ wt, data = mtcars)
-summary(model)
+
+
+Checking classes
+**Q7. Check the class of the object "Hello World". (Verifica la clase del objeto "Hello World".)**
+
+
+```{r}
+class("Hello world")
+```
+
+
+Code chunk options
+**Q8. Run the following code chunk:
+- Observe the warnings that appear. (Observa las advertencias que aparecen.)
+- Modify the chunk options to suppress warnings without changing the code itself. (Modifica las opciones del chunk para apagar la advertencia sin cambiar el código.)**
+
+
+```{r, warning=FALSE}
 log(-1)
-
 ```
 
-#### Subtitulo
+Code chunk options
+**Q9. Run the following code chunk: - Observe the messages that appear. (Observa los mensajes que aparecen.)**
+
+Modify the chunk options to suppress messages without changing the code itself. (Modifica las opciones del chunk para apagar mensajes sin cambiar el código.)
+# Load a package (may produce messages)
+```{r, message=FALSE}
+library(dplyr)
+```
+
+
+Help files
+**Q10. Use R’s help system to find out what the function mean() does. (Usa el sistema de ayuda de R para averiguar qué hace la función mean().)**
+
+
+```{r}
+?mean()
+```
+
+
+
+
+
+
+
+
+**Q11 Suma 5+10**
+
+```{r}
+5+10
+```
