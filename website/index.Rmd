@@ -14,3 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ![My profile pic](C:/Users/gbert/OneDrive/Documents/Intro R/Profile_Pic.jpg)<br><br> 
+
+# R Projects
+
+[Homework 1](C:/Users/gbert/OneDrive/Documents/Intro R/Project R/R-Studio-Workarounds/assignments/homework1/project1.Rmd)

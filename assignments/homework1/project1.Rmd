@@ -9,7 +9,88 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
+# Practica 1  (spacing)
+
+Luego de probar varios output formats los mas sencillos son los de html pretty o simplemente html document. <br> Intenté distill pero su limitacion es que no se puede poner la hora la cual se hizo el trabajo y como es requerido para la clase no la puedo utilizar.
+
+## Practica de headers (**Bold** e *Italics*)
+Para esta prueba voy a tratar *los distintos formatos de palabras*. En esta otra oracion **utilizare dos asteriscos**. Y para la ultima utilizare ***tres asteriscos***
+
+## Practica de listas
+- Programas que se utilizar
+  *  R (Un poco)
+  *  Ugene (un poco)
+- Programas que nose usar pero quiero
+  *  Python
+  *  Julia
+  *  C++
+  
+## Hacer un to-do list
+1. Aprender todo sobre Rmd
+   - Ahora mismo se muy poco
+  
+2. Hacer mi proyecto del semestre
+   - Ya creo que tengo una idea de que hacer
+3. Hacer mi propuesta
+    - Empezar es la peor parte
+
+## Como poner un link
+[Portal Viejo](https://home.uprm.edu)  
+[Portal nuevo](htpps://portal.upr.edu)  
+[My personal Github](https://github.com/GustavoBertran)
+
+## Como incluir una imagen
+![My profile pic](C:/Users/gbert/OneDrive/Documents/Intro R/Profile_Pic.jpg)<br><br> 
+<img src="C:/Users/gbert/OneDrive/Documents/Intro R/Profile_Pic.jpg" width="1080" height="25" />  
+
+
 ```{r}
+knitr::include_graphics("C:/Users/gbert/OneDrive/Documents/Intro R/Profile_Pic.jpg")
+```
+
+## Creando una tabla
+| Mentores (PI's)| Clara Isaza     | Alex Veglia  | Undergrad     |
+|----------------|-----------------:|:--------------:|---------------|
+|Estudiantes     | Gustavo, Natalia| Alan, Muchos | 2 estudiantes |
+
+## código
+
+`Ropez` es un codigo `inline`
+
+## chunks de código
+```{r}
+model <- lm(mpg ~ wt, data = mtcars)
+summary(model)
+```
+
+## Chunk options
+**include=FALSE** corre el codigo pero esconde el codigo y los resultados  
+**echo=FALSE** corre codigo y muestra resulatado  
+**message=FALSE** esconde mensajes que salgan en el output  
+**warning=FALSE** esconde warnings que salgan en el output  
+
+### include=FALSE
+
+```{r,include=FALSE}
+model <- lm(mpg ~ wt, data = mtcars)
+summary(model)
+```
+<br>
+
+### echo=FALSE
+<br>
+```{r,echo=FALSE}
+model <- lm(mpg ~ wt, data = mtcars)
+summary(model)
+```
+
+### warning=FALSE
+```{r,warning=FALSE}
+model <- lm(mpg ~ wt, data = mtcars)
+summary(model)
+log(-1)
 
 ```
 
+#### Subtitulo
