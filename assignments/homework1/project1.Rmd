@@ -1,0 +1,15 @@
+---
+title: "Homework 1"
+author: "Gustavo Bertrán"
+date: "`r format(Sys.Date(), '%Y-%m-%d')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+```
+
