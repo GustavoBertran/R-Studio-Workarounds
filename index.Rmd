@@ -18,3 +18,4 @@ knitr::opts_chunk$set(echo = TRUE)
 # R Projects
 
 [Homework 1](assignments/homework1/project1.html)
+[Homework 2](assignments/homework1/project2.html)

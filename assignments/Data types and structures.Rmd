@@ -1,0 +1,229 @@
+---
+title: "Data types and structure"
+author: "Gustavo Bertrán"
+date: "`r format(Sys.time(), '%Y-%m-%d %H:%M:%S')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Data types and structure
+
+1.  What are the different data types in R?
+2.  What are the different data structures in R?
+3.  How do I access data within the various data structures?
+
+# Everything in R is an object
+
+## `myobject<-10`
+
+| myobject |         \<-         |               10               |
+|:--------:|:-------------------:|:------------------------------:|
+|  object  | assignment operator | what is stored in the operator |
+
+# Data types in R
+
+-   `class()` : what kind of object is it?
+-   `length()` : how long is it? What about two dimensional objects?
+-   `attributes()` : does it have any metadata?
+-   `str()` :compactly display data
+
+#Practice data 
+
+## Observe data
+
+```{r}
+library(datasets)
+data("mtcars")
+head(mtcars, 3)
+print(head(mtcars))
+class(mtcars)
+length(mtcars) #number of columns
+nrow(mtcars)   #number of rows
+ncol(mtcars)   #number of columns
+attributes(mtcars) #all of the information above
+str(mtcars)  #strings, organizes data by column and the information each column has
+summary(mtcars) #Gives central tendency measurements
+```
+
+## Manipulate Data
+```{r}
+four <- 4
+class(four)
+
+```
+
+# Data structures in R
+- R has 6 basic data structures
+  1.  Vector
+  2.  Matrix
+  3.  Raw(rearely used)
+  4.  Data frame
+  5.  List
+  6.  Factor
+  
+## One Dimensional Structures
+1.  Vector
+2.  List
+
+### Vector
+- Collection of elements that are mostly commonly of mode character, logical, integer or numeric.
+- `vector <- c(x,y,z)`
+  *  R by default will classify it as a logical argument
+```{r}
+vector()
+x <- c(1,2,3)
+x
+class(x)
+z <- c("Natally", "Natalia", "Ariana")
+class(z)
+#para agregar un elemento al vector utiliza
+z <- c(z,"Alan")
+z
+z <- sort(c(z,"Diana"))
+z
+z <- sort(z, decreasing = TRUE)
+z
+y <- c(x,z)
+class(y)
+y
+
+```
+### Coercion
+- If more than one type is included in a `c()` function, R silently coerces (forces) the vector to be of one type
+  *  The type of element will focllow this heirarchy:
+      -  logical<integer<numeric<complex<character
+### Create your own vector
+```{r}
+a <- seq(1:50) # provides a sequence of numbers
+seq(1, 50, by = 2)
+seq(from = 2, to = 20, by = 0.2)
+ a[40] #shows the value in pos. 40
+ z[2]
+ z1 <- z[-2]
+ z1
+ 
+```
+
+```{r}
+series <- 0:100
+series
+sample(series,1) #random number from series
+sample(series, 5, replace = TRUE) #values may repeat from random selection
+
+
+```
+
+## Missing Data
+- In R, missing data is represented by the symbol `NA` (not available)
+```{r}
+v <- c(1,2,NA,4,5)
+mean(v)
+mean(v,na.rm = TRUE)
+
+is.na(v)
+
+```
+
+# Two Dimensional Structures
+1. Matrix
+2. Data frames
+
+## Matrix
+- All columns in a matrix must have the same mode (numeric) character, etc.) and the same length
+```{r}
+m <- matrix(1:20,nrow=4,ncol=5) #Standard matrix organization
+m
+n <- matrix(1:20, nrow=4, ncol=5, byrow=FALSE)
+n
+
+dim(m) #observe dimensions of your matrix
+
+j <- c(1,2,3,4,5)
+k <- c(6,7,8,9,10)
+l <- c(11,12,13,14,15)
+matrix <- cbind(j,k,l)
+dim(matrix)
+
+cor(matrix)
+
+```
+## Data frames
+- Data frames are tabular data objects
+- Unlike a matrix, in data frames each column can contain different modes of data
+- We can create a data frame using the `data.frame()` function.
+```{r}
+df <-  data.frame(
+  Name= c("Yoda", "R2_D2", "Chewbacca", "Obi-Wan Kenobi", "Luke Skywalker"),
+  Age = c(900, 36, 235, 57, 53),
+  Weight = c(130, 180, 150, 170, 160)
+  )
+df
+```
+# Subsetting Data Frames
+- You can access specific elements of data frame using square brackets `[]`
+- `$`operator can also be used to access specific columns by name
+```{r}
+df[1,]
+df[,2]
+df[1:3, 1]
+subset_df <- df
+subset(df, Age > 100 & Weight < 200)
+subset
+```
+
+- Add a column
+```{r}
+df$height <- c(66, 109, 228, 182, 172)
+df$Jedi <- c(TRUE, FALSE, FALSE, TRUE, TRUE)
+df
+```
+- Add a row
+```{r}
+new_row <- data.frame(Name = "Darth Vader",
+                      Age = 45,
+                      Weight = 120,
+                      height = 292,
+                      Jedi = FALSE)
+df1 <- rbind(df, new_row)
+df1
+
+```
+- changing names of a column
+```{r}
+colnames(df) <- c('character', 'Age (yrs)', 'Weight (kgs)', 'Height (m)', 'Jedi' )
+df
+str(df)
+
+```
+- Order Data Frame by a specific column
+```{r}
+df2 <- data.frame(
+  "character"= c("Yoda", "R2_D2", "Chewbacca", "Obi-Wan Kenobi", "Luke Skywalker", "Darth Vader"),
+  Planet = c("Dagoba", "Tatooine", "Kashyyyk", "Naboo", "Stewjon", "Tatooine")
+  )
+
+
+merged_df <- merge(df, df2, by = 'character')
+merged_df
+
+
+```
+
+
+
+```{r}
+codon_usage <- read.csv("codon_usage.csv")
+head(codon_usage)
+
+str(codon_usage)
+
+codon_usage[1]
+viral <- codon_usage[codon_usage$Kingdowm == "vrl", ]
+viral_bacteria <- codon_usage[codon_usage$Kingdom %in% c("vrl", "bct"),]
+```
+
+## Converting between data structures
+- We can convert between different data structures using funciton 
