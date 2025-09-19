@@ -1,0 +1,255 @@
+---
+title: 'Data Manipulation : dplyr'
+author: "Gustavo Bertrán"
+date: "`r format(Sys.time(), '%Y-%m-%d %H:%M:%S')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Data Wrangling with `dplyr`
+## Rows
+- `filter()`: keep rows matching conditions
+- `arrange()` : reorder rows
+- `slice()`   : select rows by position
+## Columns
+- `select()`: pick column by name or positions
+- `rename()`: rename columns
+- `mutate`  : create new columns
+## Groups
+- `group_by()` : define groups
+- `summarize()`: collapse data within groups
+
+## `%>%`: "then" function 
+
+# `dplyr`: the pipe ` %>% `
+- All dplyr funcitons take a data frame as the first argument.
+- Without the pipe, you'd need nested calls or temporary objects.
+-  The pipe can be read as "then" 
+- It passes the result of one function into the nedxt.
+- This makes your code:
+  - Easier to read
+  - Easier to write
+  - Easier to debug
+# Example dataset
+```{r}
+library(dplyr)
+data("starwars")
+head(starwars)
+
+
+```
+```{r, include=FALSE}
+str(starwars
+    )
+```
+
+# `dplyr`:`filter()`
+- `filter()` selects a subset of rows in a data frame or tibble
+- **The first argument is always the data frame**
+- ** The second argument (and subsequent) are conditions on variables, keeping only rows where the condition is TRUE
+
+```{r}
+starwars %>% 
+  filter(species == "Droid")
+# in base r it would look like:
+subset(starwars, species == "Droid")
+
+#another example
+starwars %>% 
+  filter(skin_color=="light",
+         eye_color=="brown" &
+           hair_color=="black")
+
+```
+
+# `dplyr` : `arrange()`
+- `arrange()` reorders the rows of a data frame or tibble
+- The first argument is the data frame, followed by one or more column names (or expressions) to order by
+- If multiple columns are provided, later columns are used to break ties in earlier ones
+
+```{r}
+starwars %>% 
+  arrange(height, mass)
+
+
+starwars %>% 
+  arrange(desc(height))
+```
+
+# `dplyr`: `slice()`
+- selects rows by their position
+- Comes with several helper functions for common use cases:
+  - `slice_head()`: select the first n rows
+  - `slice_tail()`: select the last n rows
+
+```{r}
+starwars %>% 
+  slice(5:10)
+
+starwars %>% 
+  slice_head(n=8)
+
+starwars %>% 
+  slice_tail(n=5)
+
+```
+
+
+# `dplyr`: `select()`
+- Makes it easy to extract specific columns by name( or whith helper functions)
+
+```{r}
+starwars %>% 
+  select(name, hair_color, skin_color, eye_color) %>% 
+  slice_head(n=10)
+
+```
+- Use `!` to deselct (drop) columns:
+```{r}
+starwars %>% 
+  select(!hair_color,! eye_color)
+```
+- We can use `-`to extract all except particular columns
+```{r}
+starwars %>% 
+  select(-name, -skin_color)
+```
+- We can also specify column positions, or combine column positions and names
+```{r}
+starwars %>% 
+  select(1,2, species) %>% 
+  filter(species=="Droid") %>% 
+  summarise(species)
+```
+#`dplyr`: `select()` with `contains()`
+- To select only columns with names containing the letter "D"
+```{r}
+starwars %>% 
+  select(contains('c'))
+```
+#`dplyr`: `select()` with `starts_with()`
+- `starts_with()` and `ends_with()` offer more pecificity for `select()`
+```{r}
+starwars %>% 
+  select(starts_with('n'))
+```
+
+# `dplyr`:`rename()`
+- changes column names wihtout altering the data
+```{r}
+
+#First the name you want, second the current name
+starwars %>% 
+  rename(Character = name)
+
+
+```
+
+# `dplyr`:`mutate()`
+- Add neew columns that are function of existing ones
+```{r}
+newstarwars <- starwars %>% 
+  mutate(height_m = height / 180)
+newstarwars %>% #order of columns 
+  select(height_m, height, everything())
+```
+- The `.keep` argument controls which columnsare kept in the output
+```{r}
+newstarwars %>% 
+  mutate(height_m = height/100,
+         .keep = "none")
+```
+
+#`dplyr`:`mutate()` with `ifelse()`
+- Return:
+  - One valuse **if** the condition is "TRUE"
+  - Another value **if** the condition is "FALSE"
+- Syntax: `ifelse(condition, value_if_true, value_if_false)`
+```{r}
+starwars %>% 
+  mutate(height_cat = ifelse(height > 100, "tall", "small")) %>% 
+  select (height, height_cat, everything())
+
+```
+#`dplyr`: `mutate()` with `ifelse()` and `ggplot2`
+- After creating a new variable, we can quickly visualize it with ggplot2
+```{r}
+library(ggplot2)
+starwars %>% 
+  mutate(height_cat = ifelse(height > 100, "tall", "small")) %>% 
+  ggplot(aes(x=height, file=height_cat)) +
+  geom_histogram()+
+  labs(x='algo', y='otro')
+
+
+```
+
+#`dplyr`:`summarise()`,`mean()`
+- `summarise()` collapses a data frame to a single row( or one row per group if grouped)>
+- Useful for computing summary statistics:
+- `na.rm=TURE` ignores missing values in calculations
+```{r}
+starwars %>% 
+  summarise(height_cm = mean(height, na.rm=TRUE))
+```
+#`dplyr`:`summarise()`,`mean()`,`min()`,`max()`
+```{r}
+starwars %>% 
+  summarise(mean=mean(height, na.rm=T),
+            min=min(height, na.rm=T),
+            max=max(height, na.rm=T))
+```
+
+#`dplyr`: `group_by()`, `summarise()`
+- `group_by()` defines groups for group-wise operations
+- `summarise()` then computes summary satistics for each group
+```{r}
+starwars %>% 
+  group_by(species) %>% 
+  summarise(mean_height = mean(height, na.rm=T),
+            sd_height= sd(height, na.rm=T)
+            )
+```
+
+```{r}
+starwars %>% 
+  group_by(homeworld, gender) %>%
+  summarise(mean_height_by_gender = mean(height, na.rm=T),
+            sd_height_by_gender= sd(height, na.rm=T))
+  
+  
+```
+# `dplyr`: `count()`
+- takes the name of one or more columns that contain the groups we are interested in, and we can optionally sort in order
+```{r}
+starwars %>% 
+  group_by(species) %>% 
+  count(homeworld, sort = TRUE)
+```
+
+#`dplyr`: `sample_n()`
+- randomly selects a specified number of rows from a data frame
+- Useful for exploring a subset of a large dataset
+```{r}
+starwars %>% 
+  sample_n(10)
+
+starwars %>% 
+  sample_n(10,
+           replace=T
+           )
+```
+
+#`dplyr` recap
+- All verbs in `dplyr` share a consisten grammar:
+  - The first argument is always a data.frame (or tibble)
+  - The next arguments describe what to do with the columns
+  - You can refer to columns directly (no `$` needed)
+  - The result is always a new data frame (tibble)
+
+
+
+
