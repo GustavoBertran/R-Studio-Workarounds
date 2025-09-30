@@ -30,7 +30,7 @@ knitr::opts_chunk$set(echo = TRUE)
 -   `attributes()` : does it have any metadata?
 -   `str()` :compactly display data
 
-#Practice data 
+#Practice data
 
 ## Observe data
 
@@ -49,6 +49,7 @@ summary(mtcars) #Gives central tendency measurements
 ```
 
 ## Manipulate Data
+
 ```{r}
 four <- 4
 class(four)
@@ -56,56 +57,66 @@ class(four)
 ```
 
 # Data structures in R
-- R has 6 basic data structures
-  1.  Vector
-  2.  Matrix
-  3.  Raw(rearely used)
-  4.  Data frame
-  5.  List
-  6.  Factor
-  
+
+-   R has 6 basic data structures
+    1.  Vector
+    2.  Matrix
+    3.  Raw(rearely used)
+    4.  Data frame
+    5.  List
+    6.  Factor
+
 ## One Dimensional Structures
+
 1.  Vector
 2.  List
 
 ### Vector
-- Collection of elements that are mostly commonly of mode character, logical, integer or numeric.
-- `vector <- c(x,y,z)`
-  *  R by default will classify it as a logical argument
-```{r}
-vector()
-x <- c(1,2,3)
-x
-class(x)
-z <- c("Natally", "Natalia", "Ariana")
-class(z)
-#para agregar un elemento al vector utiliza
-z <- c(z,"Alan")
-z
-z <- sort(c(z,"Diana"))
-z
-z <- sort(z, decreasing = TRUE)
-z
-y <- c(x,z)
-class(y)
-y
 
-```
-### Coercion
-- If more than one type is included in a `c()` function, R silently coerces (forces) the vector to be of one type
-  *  The type of element will focllow this heirarchy:
-      -  logical<integer<numeric<complex<character
-### Create your own vector
-```{r}
-a <- seq(1:50) # provides a sequence of numbers
-seq(1, 50, by = 2)
-seq(from = 2, to = 20, by = 0.2)
- a[40] #shows the value in pos. 40
- z[2]
- z1 <- z[-2]
- z1
- 
-```
+-   Collection of elements that are mostly commonly of mode character, logical, integer or numeric.
+
+-   `vector <- c(x,y,z)`
+
+    -   R by default will classify it as a logical argument
+
+    ```{r}
+    vector()
+    x <- c(1,2,3)
+    x
+    class(x)
+    z <- c("Natally", "Natalia", "Ariana")
+    class(z)
+    #para agregar un elemento al vector utiliza
+    z <- c(z,"Alan")
+    z
+    z <- sort(c(z,"Diana"))
+    z
+    z <- sort(z, decreasing = TRUE)
+    z
+    y <- c(x,z)
+    class(y)
+    y
+
+    ```
+
+    ### Coercion
+
+-   If more than one type is included in a `c()` function, R silently coerces (forces) the vector to be of one type
+
+    -   The type of element will focllow this heirarchy:
+
+        -   logical\<integer\<numeric\<complex\<character \### Create your own vector
+
+        ```{r}
+        a <- seq(1:50) # provides a sequence of numbers
+        seq(1, 50, by = 2)
+        seq(from = 2, to = 20, by = 0.2)
+         a[40] #shows the value in pos. 40
+         z[2]
+         z1 <- z[-2]
+         z1
+         
+        ```
 
 ```{r}
 series <- 0:100
@@ -117,7 +128,9 @@ sample(series, 5, replace = TRUE) #values may repeat from random selection
 ```
 
 ## Missing Data
-- In R, missing data is represented by the symbol `NA` (not available)
+
+-   In R, missing data is represented by the symbol `NA` (not available)
+
 ```{r}
 v <- c(1,2,NA,4,5)
 mean(v)
@@ -128,11 +141,14 @@ is.na(v)
 ```
 
 # Two Dimensional Structures
-1. Matrix
-2. Data frames
+
+1.  Matrix
+2.  Data frames
 
 ## Matrix
-- All columns in a matrix must have the same mode (numeric) character, etc.) and the same length
+
+-   All columns in a matrix must have the same mode (numeric) character, etc.) and the same length
+
 ```{r}
 m <- matrix(1:20,nrow=4,ncol=5) #Standard matrix organization
 m
@@ -150,10 +166,13 @@ dim(matrix)
 cor(matrix)
 
 ```
+
 ## Data frames
-- Data frames are tabular data objects
-- Unlike a matrix, in data frames each column can contain different modes of data
-- We can create a data frame using the `data.frame()` function.
+
+-   Data frames are tabular data objects
+-   Unlike a matrix, in data frames each column can contain different modes of data
+-   We can create a data frame using the `data.frame()` function.
+
 ```{r}
 df <-  data.frame(
   Name= c("Yoda", "R2_D2", "Chewbacca", "Obi-Wan Kenobi", "Luke Skywalker"),
@@ -162,9 +181,12 @@ df <-  data.frame(
   )
 df
 ```
+
 # Subsetting Data Frames
-- You can access specific elements of data frame using square brackets `[]`
-- `$`operator can also be used to access specific columns by name
+
+-   You can access specific elements of data frame using square brackets `[]`
+-   `$`operator can also be used to access specific columns by name
+
 ```{r}
 df[1,]
 df[,2]
@@ -174,13 +196,16 @@ subset(df, Age > 100 & Weight < 200)
 subset
 ```
 
-- Add a column
+-   Add a column
+
 ```{r}
 df$height <- c(66, 109, 228, 182, 172)
 df$Jedi <- c(TRUE, FALSE, FALSE, TRUE, TRUE)
 df
 ```
-- Add a row
+
+-   Add a row
+
 ```{r}
 new_row <- data.frame(Name = "Darth Vader",
                       Age = 45,
@@ -191,14 +216,18 @@ df1 <- rbind(df, new_row)
 df1
 
 ```
-- changing names of a column
+
+-   changing names of a column
+
 ```{r}
 colnames(df) <- c('character', 'Age (yrs)', 'Weight (kgs)', 'Height (m)', 'Jedi' )
 df
 str(df)
 
 ```
-- Order Data Frame by a specific column
+
+-   Order Data Frame by a specific column
+
 ```{r}
 df2 <- data.frame(
   "character"= c("Yoda", "R2_D2", "Chewbacca", "Obi-Wan Kenobi", "Luke Skywalker", "Darth Vader"),
@@ -212,8 +241,6 @@ merged_df
 
 ```
 
-
-
 ```{r}
 codon_usage <- read.csv("codon_usage.csv")
 head(codon_usage)
@@ -226,4 +253,5 @@ viral_bacteria <- codon_usage[codon_usage$Kingdom %in% c("vrl", "bct"),]
 ```
 
 ## Converting between data structures
-- We can convert between different data structures using funciton 
+
+-   We can convert between different data structures using functions

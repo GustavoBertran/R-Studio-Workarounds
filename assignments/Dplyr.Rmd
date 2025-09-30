@@ -149,7 +149,7 @@ starwars %>%
 ```
 
 # `dplyr`:`mutate()`
-- Add neew columns that are function of existing ones
+- Add new columns that are function of existing ones
 ```{r}
 newstarwars <- starwars %>% 
   mutate(height_m = height / 180)

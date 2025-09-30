@@ -1,0 +1,74 @@
+---
+title: "Tables"
+author: "Gustavo Bertrán"
+date: "`r format(Sys.time(), '%Y-%m-%d %H:%M:%S')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+ 
+# Tables  
+- We can create a table by using `as.table()` function, first we create a table using matrix and then assign it to thid method to get the table format.
+
+# Tables `knitr::kable()`  
+- The `kable()` function is provided by the `knitr` package
+- It creates and formats tables in Markdown HTMLor LaTex
+- Partiularly useful in reports or documents where you need professional-looking tables.
+Works directly with data frames and matrcies, making it easy to integrate into analysis and reporting workflows.
+- By default, `kable()` produces a clean table, but it can be extended with packages like `kableExtra` for more advanced formatting
+
+```{r}
+library(gaawr2)
+library(dplyr)
+library(kableExtra)
+library(knitr)
+library(gt)
+data(diabetes)
+head(diabetes)
+```
+
+```{r}
+kable(head(diabetes,5),bbooktabs = TRUE) %>% 
+  kable_styling(font_size = 12) 
+```
+
+```{r}
+kable(head(diabetes,5), booktabs = TRUE) %>% 
+  kable_styling(font_size = 14,bootstrap_options = "striped", full_width = F)
+```
+```{r}
+kable(head(diabetes[1:2],5), booktabs = TRUE) %>% 
+  kable_styling(font_size = 14,bootstrap_options = "striped", full_width = F)
+```
+
+
+```{r}
+kable(head(diabetes[1:2],5), booktabs = TRUE) %>% 
+  kable_styling(font_size = 14, position = "right", bootstrap_options = "striped", full_width = F)
+```
+
+```{r}
+kable(head(diabetes, 5), booktabs = TRUE) %>% 
+  kable_styling(font_size = 14,bootstrap_options = "striped", full_width = F) %>% 
+  add_header_above(c("Personal data" = 4, "Profile" = 10))
+```
+```{r}
+kable(diabetes, digits = 2, format = "html", row.names = TRUE) %>% 
+  kable_styling(bootstrap_options = "striped", 
+                full_width = T,
+                font_size = 15) %>% 
+  scroll_box(height = "300px")
+
+
+```
+
+
+
+```{r}
+diabetes %>% 
+  dplyr::select(ID, No_Pation, Gender, AGE) %>% gt_preview()
+```
+
