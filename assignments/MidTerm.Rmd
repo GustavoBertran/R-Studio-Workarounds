@@ -1,7 +1,7 @@
 ---
 title: "Mid_term_Exam"
 author: "Gustavo Bertrán"
-date: "2025-10-09"
+date: "`r format(Sys.time(), '%Y-%m-%d %H:%M:%S')`"
 output: html_document
 ---
 
@@ -9,15 +9,15 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
 
 library(dplyr)
 
-library('aod')
+library(aod)
 ```
 
-```{r}
+```{r, include=FALSE}
 msleep <- glimpse(msleep)
 
 storms <- storms
@@ -25,5 +25,88 @@ storms <- storms
  
 
 lizards <- lizards
+```
+## Mammals sleep dataset (msleep)  
+
+## 1. Use filter() to subset msleep to only animals who are awake for at least 12 hours of the day.  
+- Hint: “At least” like saying “greater than or equal to,” i.e. >=  
+```{r}
+head(msleep)
+str(msleep)
+goodsleep <- msleep %>% 
+            filter(awake >= 12)
+goodsleep
+```
+
+
+
+### 2. Use mutate() to create a new column called percent_day_awake that gives the percentage of the day that each species spends awake. Use select() with everything() at the end to verify your calculation.  
+- Hint: A day has 24 hours. The column awake indicates the average hours a species is awake per day. Calculate the percentage with (col / 24) * 100.
+
+```{r}
+percentawake <- msleep %>% 
+                mutate(percent_day_awake = (awake /24) *100) %>% 
+                select(percent_day_awake, everything())
+percentawake
+```
+
+
+
+## Storm tracks data (storms)
+
+
+### 3. Use group_by() and summarise() to calculate the number of storms per year.  
+- Hint group_by(col) groups the rows by time, and summarise(num_storms = n()) counts how many rows (storms) there are per year.
+
+```{r}
+stormpyr <- storms %>% 
+            group_by(year) %>% 
+            summarise(num_storm = n())
+stormpyr
+```
+
+
+### 4. Use filter() to subset storms to only storms with wind speeds greater than 50 knots, then use arrange() to sort by wind descending.   
+- Hint Use filter(col > 50) to select strong storms, and arrange(desc(col)) to sort the results from highest to lowest.
+
+
+```{r}
+strongstorm <- storms %>% 
+              filter(wind > 50) %>% 
+                arrange(desc(wind))
+strongstorm
+
+```
+
+
+## A Comparison of Site Preferences of Two Species of Lizard (lizards)  
+
+
+
+
+### 5. Determine which Site and Diameter combination has the highest total grahami.
+Determina cuál combinación de Sitio y Diámetro tiene el total de grahami más alto.  
+- Hint: group_by(col1, col2) %>% summarise(new_var = sum(var)) %>% arrange(desc(new_var))
+```{r, message=FALSE}
+head(lizards)
+highestgrahami <- lizards %>% 
+                  group_by(Site, Diameter) %>% 
+                  summarise(total_grahami = sum(grahami)) %>% 
+                  arrange(desc(total_grahami))
+
+highestgrahami
+```
+
+
+### 6. Identify which Time of day has the highest average opalinus count.
+Identifica en qué Momento del día se registra el promedio más alto de opalinus.  
+- Hint: Use group_by(col1) %>% summarise(new_name = mean(var)) %>% arrange(desc(new_name))
+
+```{r}
+opalinusabundance <- lizards %>% 
+                      group_by(Time) %>% 
+                      summarise(avgOpalinus = mean(opalinus)) %>% 
+                      arrange(desc(avgOpalinus))
+opalinusabundance
 ```
 

@@ -11,7 +11,6 @@
 
 <meta name="author" content="Gustavo Bertrán" />
 
-<meta name="date" content="2025-10-09" />
 
 <title>Mid_term_Exam</title>
 
@@ -352,49 +351,210 @@ display: none;
 
 <h1 class="title toc-ignore">Mid_term_Exam</h1>
 <h4 class="author">Gustavo Bertrán</h4>
-<h4 class="date">2025-10-09</h4>
+<h4 class="date">2025-10-09 15:55:57</h4>
 
 </div>
 
 
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## Warning: package &#39;tidyverse&#39; was built under R version 4.4.3</code></pre>
-<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.4.3</code></pre>
-<pre><code>## Warning: package &#39;forcats&#39; was built under R version 4.4.3</code></pre>
-<pre><code>## Warning: package &#39;lubridate&#39; was built under R version 4.4.3</code></pre>
-<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-## ✔ dplyr     1.1.4     ✔ readr     2.1.5
-## ✔ forcats   1.0.1     ✔ stringr   1.5.1
-## ✔ ggplot2   3.5.2     ✔ tibble    3.2.1
-## ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
-## ✔ purrr     1.0.4     
-## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()
-## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-<pre class="r"><code>library(dplyr)
+<pre class="r"><code>library(tidyverse)
 
-library(&#39;aod&#39;)</code></pre>
-<pre><code>## Warning: package &#39;aod&#39; was built under R version 4.4.3</code></pre>
-<pre class="r"><code>msleep &lt;- glimpse(msleep)</code></pre>
-<pre><code>## Rows: 83
-## Columns: 11
-## $ name         &lt;chr&gt; &quot;Cheetah&quot;, &quot;Owl monkey&quot;, &quot;Mountain beaver&quot;, &quot;Greater shor…
-## $ genus        &lt;chr&gt; &quot;Acinonyx&quot;, &quot;Aotus&quot;, &quot;Aplodontia&quot;, &quot;Blarina&quot;, &quot;Bos&quot;, &quot;Bra…
-## $ vore         &lt;chr&gt; &quot;carni&quot;, &quot;omni&quot;, &quot;herbi&quot;, &quot;omni&quot;, &quot;herbi&quot;, &quot;herbi&quot;, &quot;carn…
-## $ order        &lt;chr&gt; &quot;Carnivora&quot;, &quot;Primates&quot;, &quot;Rodentia&quot;, &quot;Soricomorpha&quot;, &quot;Art…
-## $ conservation &lt;chr&gt; &quot;lc&quot;, NA, &quot;nt&quot;, &quot;lc&quot;, &quot;domesticated&quot;, NA, &quot;vu&quot;, NA, &quot;dome…
-## $ sleep_total  &lt;dbl&gt; 12.1, 17.0, 14.4, 14.9, 4.0, 14.4, 8.7, 7.0, 10.1, 3.0, 5…
-## $ sleep_rem    &lt;dbl&gt; NA, 1.8, 2.4, 2.3, 0.7, 2.2, 1.4, NA, 2.9, NA, 0.6, 0.8, …
-## $ sleep_cycle  &lt;dbl&gt; NA, NA, NA, 0.1333333, 0.6666667, 0.7666667, 0.3833333, N…
-## $ awake        &lt;dbl&gt; 11.9, 7.0, 9.6, 9.1, 20.0, 9.6, 15.3, 17.0, 13.9, 21.0, 1…
-## $ brainwt      &lt;dbl&gt; NA, 0.01550, NA, 0.00029, 0.42300, NA, NA, NA, 0.07000, 0…
-## $ bodywt       &lt;dbl&gt; 50.000, 0.480, 1.350, 0.019, 600.000, 3.850, 20.490, 0.04…</code></pre>
-<pre class="r"><code>storms &lt;- storms
+library(dplyr)
 
- 
+library(aod)</code></pre>
+<div id="mammals-sleep-dataset-msleep" class="section level2">
+<h2>Mammals sleep dataset (msleep)</h2>
+</div>
+<div id="use-filter-to-subset-msleep-to-only-animals-who-are-awake-for-at-least-12-hours-of-the-day." class="section level2">
+<h2>1. Use filter() to subset msleep to only animals who are awake for
+at least 12 hours of the day.</h2>
+<ul>
+<li>Hint: “At least” like saying “greater than or equal to,”
+i.e. &gt;=</li>
+</ul>
+<pre class="r"><code>head(msleep)</code></pre>
+<pre><code>## # A tibble: 6 × 11
+##   name    genus vore  order conservation sleep_total sleep_rem sleep_cycle awake
+##   &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl&gt;
+## 1 Cheetah Acin… carni Carn… lc                  12.1      NA        NA      11.9
+## 2 Owl mo… Aotus omni  Prim… &lt;NA&gt;                17         1.8      NA       7  
+## 3 Mounta… Aplo… herbi Rode… nt                  14.4       2.4      NA       9.6
+## 4 Greate… Blar… omni  Sori… lc                  14.9       2.3       0.133   9.1
+## 5 Cow     Bos   herbi Arti… domesticated         4         0.7       0.667  20  
+## 6 Three-… Brad… herbi Pilo… &lt;NA&gt;                14.4       2.2       0.767   9.6
+## # ℹ 2 more variables: brainwt &lt;dbl&gt;, bodywt &lt;dbl&gt;</code></pre>
+<pre class="r"><code>str(msleep)</code></pre>
+<pre><code>## tibble [83 × 11] (S3: tbl_df/tbl/data.frame)
+##  $ name        : chr [1:83] &quot;Cheetah&quot; &quot;Owl monkey&quot; &quot;Mountain beaver&quot; &quot;Greater short-tailed shrew&quot; ...
+##  $ genus       : chr [1:83] &quot;Acinonyx&quot; &quot;Aotus&quot; &quot;Aplodontia&quot; &quot;Blarina&quot; ...
+##  $ vore        : chr [1:83] &quot;carni&quot; &quot;omni&quot; &quot;herbi&quot; &quot;omni&quot; ...
+##  $ order       : chr [1:83] &quot;Carnivora&quot; &quot;Primates&quot; &quot;Rodentia&quot; &quot;Soricomorpha&quot; ...
+##  $ conservation: chr [1:83] &quot;lc&quot; NA &quot;nt&quot; &quot;lc&quot; ...
+##  $ sleep_total : num [1:83] 12.1 17 14.4 14.9 4 14.4 8.7 7 10.1 3 ...
+##  $ sleep_rem   : num [1:83] NA 1.8 2.4 2.3 0.7 2.2 1.4 NA 2.9 NA ...
+##  $ sleep_cycle : num [1:83] NA NA NA 0.133 0.667 ...
+##  $ awake       : num [1:83] 11.9 7 9.6 9.1 20 9.6 15.3 17 13.9 21 ...
+##  $ brainwt     : num [1:83] NA 0.0155 NA 0.00029 0.423 NA NA NA 0.07 0.0982 ...
+##  $ bodywt      : num [1:83] 50 0.48 1.35 0.019 600 ...</code></pre>
+<pre class="r"><code>goodsleep &lt;- msleep %&gt;% 
+            filter(awake &gt;= 12)
+goodsleep</code></pre>
+<pre><code>## # A tibble: 52 × 11
+##    name   genus vore  order conservation sleep_total sleep_rem sleep_cycle awake
+##    &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl&gt;
+##  1 Cow    Bos   herbi Arti… domesticated         4         0.7       0.667  20  
+##  2 North… Call… carni Carn… vu                   8.7       1.4       0.383  15.3
+##  3 Vespe… Calo… &lt;NA&gt;  Rode… &lt;NA&gt;                 7        NA        NA      17  
+##  4 Dog    Canis carni Carn… domesticated        10.1       2.9       0.333  13.9
+##  5 Roe d… Capr… herbi Arti… lc                   3        NA        NA      21  
+##  6 Goat   Capri herbi Arti… lc                   5.3       0.6      NA      18.7
+##  7 Guine… Cavis herbi Rode… domesticated         9.4       0.8       0.217  14.6
+##  8 Grivet Cerc… omni  Prim… lc                  10         0.7      NA      14  
+##  9 Star-… Cond… omni  Sori… lc                  10.3       2.2      NA      13.7
+## 10 Afric… Cric… omni  Rode… &lt;NA&gt;                 8.3       2        NA      15.7
+## # ℹ 42 more rows
+## # ℹ 2 more variables: brainwt &lt;dbl&gt;, bodywt &lt;dbl&gt;</code></pre>
+<div id="use-mutate-to-create-a-new-column-called-percent_day_awake-that-gives-the-percentage-of-the-day-that-each-species-spends-awake.-use-select-with-everything-at-the-end-to-verify-your-calculation." class="section level3">
+<h3>2. Use mutate() to create a new column called percent_day_awake that
+gives the percentage of the day that each species spends awake. Use
+select() with everything() at the end to verify your calculation.</h3>
+<ul>
+<li>Hint: A day has 24 hours. The column awake indicates the average
+hours a species is awake per day. Calculate the percentage with (col /
+24) * 100.</li>
+</ul>
+<pre class="r"><code>percentawake &lt;- msleep %&gt;% 
+                mutate(percent_day_awake = (awake /24) *100) %&gt;% 
+                select(percent_day_awake, everything())
+percentawake</code></pre>
+<pre><code>## # A tibble: 83 × 12
+##    percent_day_awake name   genus vore  order conservation sleep_total sleep_rem
+##                &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;
+##  1              49.6 Cheet… Acin… carni Carn… lc                  12.1      NA  
+##  2              29.2 Owl m… Aotus omni  Prim… &lt;NA&gt;                17         1.8
+##  3              40   Mount… Aplo… herbi Rode… nt                  14.4       2.4
+##  4              37.9 Great… Blar… omni  Sori… lc                  14.9       2.3
+##  5              83.3 Cow    Bos   herbi Arti… domesticated         4         0.7
+##  6              40   Three… Brad… herbi Pilo… &lt;NA&gt;                14.4       2.2
+##  7              63.8 North… Call… carni Carn… vu                   8.7       1.4
+##  8              70.8 Vespe… Calo… &lt;NA&gt;  Rode… &lt;NA&gt;                 7        NA  
+##  9              57.9 Dog    Canis carni Carn… domesticated        10.1       2.9
+## 10              87.5 Roe d… Capr… herbi Arti… lc                   3        NA  
+## # ℹ 73 more rows
+## # ℹ 4 more variables: sleep_cycle &lt;dbl&gt;, awake &lt;dbl&gt;, brainwt &lt;dbl&gt;,
+## #   bodywt &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div id="storm-tracks-data-storms" class="section level2">
+<h2>Storm tracks data (storms)</h2>
+<div id="use-group_by-and-summarise-to-calculate-the-number-of-storms-per-year." class="section level3">
+<h3>3. Use group_by() and summarise() to calculate the number of storms
+per year.</h3>
+<ul>
+<li>Hint group_by(col) groups the rows by time, and summarise(num_storms
+= n()) counts how many rows (storms) there are per year.</li>
+</ul>
+<pre class="r"><code>stormpyr &lt;- storms %&gt;% 
+            group_by(year) %&gt;% 
+            summarise(num_storm = n())
+stormpyr</code></pre>
+<pre><code>## # A tibble: 48 × 2
+##     year num_storm
+##    &lt;dbl&gt;     &lt;int&gt;
+##  1  1975       238
+##  2  1976       126
+##  3  1977        92
+##  4  1978       152
+##  5  1979       324
+##  6  1980       335
+##  7  1981       311
+##  8  1982       111
+##  9  1983        88
+## 10  1984       342
+## # ℹ 38 more rows</code></pre>
+</div>
+<div id="use-filter-to-subset-storms-to-only-storms-with-wind-speeds-greater-than-50-knots-then-use-arrange-to-sort-by-wind-descending." class="section level3">
+<h3>4. Use filter() to subset storms to only storms with wind speeds
+greater than 50 knots, then use arrange() to sort by wind
+descending.</h3>
+<ul>
+<li>Hint Use filter(col &gt; 50) to select strong storms, and
+arrange(desc(col)) to sort the results from highest to lowest.</li>
+</ul>
+<pre class="r"><code>strongstorm &lt;- storms %&gt;% 
+              filter(wind &gt; 50) %&gt;% 
+                arrange(desc(wind))
+strongstorm</code></pre>
+<pre><code>## # A tibble: 6,991 × 13
+##    name     year month   day  hour   lat  long status    category  wind pressure
+##    &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;        &lt;dbl&gt; &lt;int&gt;    &lt;int&gt;
+##  1 Allen    1980     8     7    18  21.8 -86.4 hurricane        5   165      899
+##  2 Gilbert  1988     9    14     0  19.7 -83.8 hurricane        5   160      888
+##  3 Wilma    2005    10    19    12  17.3 -82.8 hurricane        5   160      882
+##  4 Dorian   2019     9     1    16  26.5 -77   hurricane        5   160      910
+##  5 Dorian   2019     9     1    18  26.5 -77.1 hurricane        5   160      910
+##  6 Allen    1980     8     5    12  15.9 -70.5 hurricane        5   155      932
+##  7 Allen    1980     8     7    12  21   -84.8 hurricane        5   155      910
+##  8 Allen    1980     8     8     0  22.2 -87.9 hurricane        5   155      920
+##  9 Allen    1980     8     9     6  25   -94.2 hurricane        5   155      909
+## 10 Gilbert  1988     9    14     6  19.9 -85.3 hurricane        5   155      889
+## # ℹ 6,981 more rows
+## # ℹ 2 more variables: tropicalstorm_force_diameter &lt;int&gt;,
+## #   hurricane_force_diameter &lt;int&gt;</code></pre>
+</div>
+</div>
+<div id="a-comparison-of-site-preferences-of-two-species-of-lizard-lizards" class="section level2">
+<h2>A Comparison of Site Preferences of Two Species of Lizard
+(lizards)</h2>
+<div id="determine-which-site-and-diameter-combination-has-the-highest-total-grahami." class="section level3">
+<h3>5. Determine which Site and Diameter combination has the highest
+total grahami.</h3>
+<p>Determina cuál combinación de Sitio y Diámetro tiene el total de
+grahami más alto.<br />
+- Hint: group_by(col1, col2) %&gt;% summarise(new_var = sum(var)) %&gt;%
+arrange(desc(new_var))</p>
+<pre class="r"><code>head(lizards)</code></pre>
+<pre><code>##   Site Diameter Height    Time grahami opalinus
+## 1  Sun   D &lt;= 2  H &lt; 5   Early      20        2
+## 2  Sun   D &lt;= 2  H &lt; 5 Mid-day       8        1
+## 3  Sun   D &lt;= 2  H &lt; 5    Late       4        4
+## 4  Sun   D &lt;= 2 H &gt;= 5   Early      13        0
+## 5  Sun   D &lt;= 2 H &gt;= 5 Mid-day       8        0
+## 6  Sun   D &lt;= 2 H &gt;= 5    Late      12        0</code></pre>
+<pre class="r"><code>highestgrahami &lt;- lizards %&gt;% 
+                  group_by(Site, Diameter) %&gt;% 
+                  summarise(total_grahami = sum(grahami)) %&gt;% 
+                  arrange(desc(total_grahami))
 
-lizards &lt;- lizards</code></pre>
+highestgrahami</code></pre>
+<pre><code>## # A tibble: 4 × 3
+## # Groups:   Site [2]
+##   Site  Diameter total_grahami
+##   &lt;fct&gt; &lt;fct&gt;            &lt;dbl&gt;
+## 1 Shade D &lt;= 2             220
+## 2 Shade D &gt; 2              122
+## 3 Sun   D &lt;= 2              65
+## 4 Sun   D &gt; 2               24</code></pre>
+</div>
+<div id="identify-which-time-of-day-has-the-highest-average-opalinus-count." class="section level3">
+<h3>6. Identify which Time of day has the highest average opalinus
+count.</h3>
+<p>Identifica en qué Momento del día se registra el promedio más alto de
+opalinus.<br />
+- Hint: Use group_by(col1) %&gt;% summarise(new_name = mean(var)) %&gt;%
+arrange(desc(new_name))</p>
+<pre class="r"><code>opalinusabundance &lt;- lizards %&gt;% 
+                      group_by(Time) %&gt;% 
+                      summarise(avgOpalinus = mean(opalinus)) %&gt;% 
+                      arrange(desc(avgOpalinus))
+opalinusabundance</code></pre>
+<pre><code>## # A tibble: 3 × 2
+##   Time    avgOpalinus
+##   &lt;fct&gt;         &lt;dbl&gt;
+## 1 Mid-day        7.88
+## 2 Early          4.62
+## 3 Late           4.12</code></pre>
+</div>
+</div>
 
 
 
