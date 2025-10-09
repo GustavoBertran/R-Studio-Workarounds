@@ -1,0 +1,29 @@
+---
+title: "Mid_term_Exam"
+author: "Gustavo Bertrán"
+date: "2025-10-09"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+
+library(dplyr)
+
+library('aod')
+```
+
+```{r}
+msleep <- glimpse(msleep)
+
+storms <- storms
+
+ 
+
+lizards <- lizards
+```
+
