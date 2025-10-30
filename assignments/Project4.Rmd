@@ -1,0 +1,92 @@
+---
+title: "ANOVA"
+author: "Gustavo Bertrán"
+date: "2025-10-30"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+setwd("~/Intro R/Project R/R-Studio-Workarounds/assignments")
+library(ggplot2)
+library(car)
+library(dplyr)
+```
+
+
+```{r}
+library(readr)
+tyre <- read_csv("tyre.csv")
+head(tyre)
+```
+
+
+```{r}
+p <- ggplot(tyre, aes(x = Brands, y = Mileage)) + 
+  geom_boxplot(aes(fill=Brands)) +
+  geom_jitter() +
+  #Labels
+  labs(title= "Rendimiento de Gomas en PuertoRico", x="Gomas", y="Kilometers") +
+#Themes
+  theme_linedraw() +
+  theme(plot.title = element_text(size = 18,
+                                  face = "bold",
+                                  hjust = 0.5,
+                                  color = "cornflowerblue")) + 
+  theme(axis.title.y = element_text(size =18,
+                                    face ="bold",
+                                    color="lightblue"),
+        axis.text.y = element_text(size = 16,
+                                   face = "plain",
+                                   color = "black")) +
+  theme(axis.title.x = element_text(size = 18,
+                                    face = "bold",
+                                    color = "blue"),
+        axis.text.x = element_text(size = 16,
+                                   face = "plain",
+                                   color = "black")) +
+  theme(legend.title = element_text(size = 18,
+                                    face = "italic",
+                                    color = "black")) 
+        
+  
+  
+
+p
+
+```
+
+#Assumption checks
+```{r}
+mod <- aov(Mileage ~ Brands, data = tyre)
+summary(mod)
+
+residuals_mod <- residuals(mod)
+
+shapiro.test(residuals_mod)
+
+leveneTest(Mileage ~ Brands, data = tyre)
+#high p value = equal variance
+
+
+```
+
+```{r}
+post_test <- TukeyHSD(mod)
+post_test
+```
+
+
+```{r}
+
+#ggsave(filename="plot.png",
+#plot = p,
+#width=8,
+#height=6,
+#dpi=300)
+
+```
+

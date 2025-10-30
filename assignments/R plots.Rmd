@@ -1,0 +1,282 @@
+---
+title: "ggplot"
+author: "Gustavo Bertrán"
+date: "2025-10-14"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Plots in Base R
+- There are many types of statistical plots, but only five essential ones for beginners:
+  - Scatter plots: show relationships among numberical variables.
+  - Line graphs: show change over time.
+  - Histograms: show data distributions
+  - Boxplots: show between-group and within-group variation
+  - Baar plots: show summary statistics (e.g., counts, means, or proportions)
+  
+## Thinking like a statistician
+- Quantitative Variables: a measurable amount
+  1. Continous variable: may assyme any imaginable value within a certain rage. Can (theoretically) have an infinite number of values
+    - Weights, Heights
+  2. Discrete Variables; countable as integers (whole numbers). No values between two adjacent values are permissible
+    - Number of bicycles sold in a day.
+    
+- Qualitative Variables: descriptive characteristic assignable to a category.
+  1. Nominal Variables: measurements fall into a particular class or categorty with no order implied.
+    -sex(male or female), color(red, blue, green)
+  2. Ordinal Variables: a ranking scale where order between categories is implied.
+    - Likert scale(strongly agree, agree, neutral, disagree, strongly disagree)
+    3. Interval (ratio) Variables: use a quantitative measurement to assign a specific qualitative category(these are still ordinal)
+    - Temperature( cold, warm, hot), age(young, middle-aged, old)
+    
+## Plots in Base R: Barplots
+- In a bar chart, calues are represented by length of bars, each corresponding to a measured group. 
+  - Bar charts can be vertical or horizontal: 
+    - Vertical bar charts are often called column charts.
+    - Horizontal bar charts are ideal wehen:
+      - You have many bars to plot, or labels need extra space to be legible.
+    
+## Dataset: DNase(built-in in R)
+- We will use `barplot()`function to create a barplot of the mean optical density for each substrate concentration  
+
+#Load dataset
+```{r}
+data("DNase")
+head(DNase)
+```
+- Variables
+  - `conc` -> substrate concenctration (in mg/mL).
+  - `density` -> optical density, representing the experimentally measured enzymatic activity.
+  - `Run` -> experimental run or replicate number (factor with 11 levels).
+  
+## `barplot()` function
+- R language uses the the function `barplot()` to create bar charts. Here, both vertical and Horizontal bars can be drawn.  
+- Syntax: `barplot(H, names.arg, xlab, ylab, main, col)` 
+  -`H`  vector or matrix containing numeric values which are used in bar chart
+  - `names.arg` vector of names appearing under each bar in bar chart
+  - `xlab`  label for x axis in bar chart
+  - `ylab` label for y axis in bar chart
+  - `main`  title of the bar chart
+  - `col` used to give colors to the bars in the graphsd
+  
+  
+### # 1 Inspect Data
+```{r}
+head(DNase, 3)
+
+# Variables:
+# conc = concentration of the substrate
+# density = optical density (enzyme activity)
+# Run = experimental replicate
+```
+
+- We use `aggregate()` to summarize the 11 experimental runs and visualize the average enzymatic activity at each concentration.
+
+### # 2 Calculate mean density per concentration
+
+```{r}
+mean_density <-  aggregate(density ~ conc, data = DNase, FUN = mean)
+  
+  
+``` 
+
+### # 3 Create barplot
+```{r}
+barplot(
+  height = mean_density$density,
+  names.arg = mean_density$conc,
+  col = blues9,
+  main = "Mean DNase I Activity by Concentration",
+  xlab = "Concentration (mg/mL)",
+  ylab = "Mean Optical Density",
+  las = 2,
+  cex.names = 0.54
+)
+```
+
+- Simple Horizontal Bar Plot
+```{r}
+barplot(
+  height = mean_density$density,
+  names.arg = mean_density$conc,
+  col = blues9,
+  main = "Mean DNase I Activity by Concentration",
+  xlab = "Concentration (mg/mL)",
+  ylab = "Mean Optical Density",
+  las = 2,
+  cex.names = 0.54,
+  horiz = TRUE
+)
+```
+
+## Dataset: coronary
+- The dataset contains the total cholesterol level, their individual characteristics and intervention groups in a hypothetical clinical trial. The dataset contains 200 observations for nine variables:
+```{r}
+setwd("~/Intro R/Project R/R-Studio-Workarounds/assignments")
+library(readxl)
+coronary <- read_excel("coronary.xlsx")
+head(coronary, 3)
+
+```
+- The dataset contains the total cholesterol level, their individual characteristics and intervention groups in a hypothetical clinical trial. The dataset contains 200 observations for nine variables:
+- Variables:
+  - id: subject's id
+  - cad: Coronary artery disease status (categorical) {no cad, cad}
+  -sbp: Systolic blood pressure in mmHg (numerical)
+  -dbp: Diastolic blood pressure in mmHg (numerical)
+  -chol: Total cholesterol level in mmol/L (numerical)
+  -age: Age in years (numerical)
+  -bmi: Body mass index (numerical)
+  -race: Race of the subjects (categorical) {malay, chinese, indian}.
+  -gender: Gender of the subjects (categorical){woman, man}
+
+### Create a line chart
+```{r}
+plot(
+  coronary$dbp ~ coronary$chol,
+  type = "p",
+  col = "blue",
+  lwd = 2,
+  xlab = "Total Cholesterol (mol/L)",
+  ylab = "Diastolic Blood Pressure (mmHg)",
+  main = "Relationship between Cholesterol and Diastolic BP",
+  pch = 15
+)
+
+?plot
+```
+
+## Spearman Correlation: chol vs dpb
+- The Spearman correlation evaluates the monotonic (rank-based) relationship between cholesterol and diastolic blood pressure.
+
+```{r}
+spearman_result <- cor.test(
+  coronary$chol,
+  coronary$dbp,
+  method = "spearman",
+  exact = FALSE
+)
+
+spearman_result
+?cor.test
+```
+
+- Spearman's rho (p) indicates the strength and direction of the monotonic relationship.
+- p-value assesses wether this relationship is statistically significant
+  - p > 0 -> higher cholesterol toends to accompany higher diastolic BP
+  - p < 0 -> higher cholesterol tends to accompany lower diastolic BP
+  
+  
+## Test for Normality
+
+```{r}
+shapiro.test(coronary$chol)
+
+shapiro.test(coronary$dbp)
+
+
+
+```
+
+## Visualization
+
+```{r}
+plot(
+  coronary$dbp ~ coronary$chol,
+  type = "p",
+  col = "blue",
+  lwd = 2,
+  xlab = "Total Cholesterol (mol/L)",
+  ylab = "Diastolic Blood Pressure (mmHg)",
+  main = "Relationship between Cholesterol and Diastolic BP",
+  pch = 15
+)
+abline(lm(dbp ~ chol, data = coronary),col = "red", lwd = 2, lty =2)
+```
+
+## Line Charts
+- Line charts show changes in value across continous measurements, such as over time.
+- Movement of the line up or down highlights positive or negative changes.
+- Line charts can expose overall trends and helmp make predictions or projections
+- Multiple line charts can also give rise to related charts like sparklines or ridgeline plots.
+
+## plot() function
+```{r}
+coronary <- coronary[order(coronary$age), ]
+
+plot(coronary$age, coronary$chol,
+     type = "l",
+     col = "blue",
+     lwd = 2,
+     xlab = "Age (years)",
+     ylab = "Cholesterol (mmol/L)",
+     main = "Cholesterol vs Age"
+)
+```
+
+## Histograms
+- Histograms are used to visualize distribution of a single continous variable
+- They show how often data values fall within specific intervals 
+- Useful for identifying the shape of the data and detecting outliers or spread in the dataset
+- in R, histograms can be created using the `hist()` function, which allows customization of the number of bins, colors, and labels
+
+
+```{r}
+hist(coronary$chol,
+     main = "Distribution of Cholesterol",
+     xlab = "Cholesterol (mmol/L)",
+     col = "lightblue",
+     border = "white",
+     breaks = 40
+     )
+```
+
+
+## Boxplots
+- Boxplots are used to visualize the distribution of a numeric variable and detect outliers
+- They display:
+  - Median (central line inside box)
+  - Interquartile range (IQR) - the box spans from the 25th to the 75th 
+  - Whiskers which extend up to Q1 -1.5 & Q3 +1.5 from the box
+  - Points beyond whiskers represent potential outliers
+  
+```{r}
+boxplot(coronary$chol,
+        main = "Cholesterol Levels",
+        ylab = "Cholesterol (mmol/L)",
+        col = "lightgreen",
+        border = "darkgreen"
+        )
+```
+
+
+```{r}
+boxplot(sbp ~ gender,
+        data = coronary,
+        main = "Systolic Blood Pressure by Age Group",
+        xlab = "Age Group (years)",
+        ylab = "Systolic BP (mmHg)",
+        col = "lightblue",
+        border = "darkblue"
+        )
+```
+
+## Variance analysis
+- We can use ANOVA to test wether mean systolic blood pressure (SBP) differs across age groups or genders.
+
+```{r}
+anova_model <- aov(sbp ~ gender, data = coronary)
+summary(anova_model)
+
+```
+
+## Assumptions of ANOVA
+- Normality- residuals should be approximately normally distributed. We check this using the Shapiro Test
+```{r}
+shapiro.test(residuals(anova_model))
+```
+
+

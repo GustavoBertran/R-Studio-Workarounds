@@ -249,7 +249,35 @@ starwars %>%
   - The next arguments describe what to do with the columns
   - You can refer to columns directly (no `$` needed)
   - The result is always a new data frame (tibble)
+  
+  msleep %>%
+  filter(awake >= 12)
 
 
-
+msleep %>%
+  mutate(percent_day_awake = (awake / 24) * 100) %>%
+  select(percent_day_awake, everything())
+  
+  
+  storms %>%
+  group_by(year) %>%
+  summarise(num_storms = n())
+  
+  
+  storms %>%
+  filter(wind > 50) %>%
+  arrange(desc(wind))
+  
+  
+  
+  lizards %>%
+  group_by(Site, Diameter) %>%
+  summarise(total_grahami = sum(grahami)) %>%
+  arrange(desc(total_grahami))
+  
+  
+  lizards %>%
+  group_by(Time) %>%
+  summarise(avg_opalinus = mean(opalinus)) %>%
+  arrange(desc(avg_opalinus))
 

@@ -11,8 +11,9 @@
 
 <meta name="author" content="Gustavo Bertrán" />
 
+<meta name="date" content="2025-10-30" />
 
-<title>Data Manipulation : dplyr</title>
+<title>ANOVA</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -349,593 +350,128 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">Data Manipulation : dplyr</h1>
+<h1 class="title toc-ignore">ANOVA</h1>
 <h4 class="author">Gustavo Bertrán</h4>
-<h4 class="date">2025-10-09 14:55:32</h4>
+<h4 class="date">2025-10-30</h4>
 
 </div>
 
 
-<div id="data-wrangling-with-dplyr" class="section level1">
-<h1>Data Wrangling with <code>dplyr</code></h1>
-<div id="rows" class="section level2">
-<h2>Rows</h2>
-<ul>
-<li><code>filter()</code>: keep rows matching conditions</li>
-<li><code>arrange()</code> : reorder rows</li>
-<li><code>slice()</code> : select rows by position ## Columns</li>
-<li><code>select()</code>: pick column by name or positions</li>
-<li><code>rename()</code>: rename columns</li>
-<li><code>mutate</code> : create new columns ## Groups</li>
-<li><code>group_by()</code> : define groups</li>
-<li><code>summarize()</code>: collapse data within groups</li>
-</ul>
-</div>
-<div id="then-function" class="section level2">
-<h2><code>%&gt;%</code>: “then” function</h2>
-</div>
-</div>
-<div id="dplyr-the-pipe" class="section level1">
-<h1><code>dplyr</code>: the pipe <code>%&gt;%</code></h1>
-<ul>
-<li>All dplyr funcitons take a data frame as the first argument.</li>
-<li>Without the pipe, you’d need nested calls or temporary objects.</li>
-<li>The pipe can be read as “then”</li>
-<li>It passes the result of one function into the nedxt.</li>
-<li>This makes your code:
-<ul>
-<li>Easier to read</li>
-<li>Easier to write</li>
-<li>Easier to debug # Example dataset</li>
-</ul></li>
-</ul>
+<pre class="r"><code>setwd(&quot;~/Intro R/Project R/R-Studio-Workarounds/assignments&quot;)
+library(ggplot2)</code></pre>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.4.3</code></pre>
+<pre class="r"><code>library(car)</code></pre>
+<pre><code>## Warning: package &#39;car&#39; was built under R version 4.4.3</code></pre>
+<pre><code>## Loading required package: carData</code></pre>
+<pre><code>## Warning: package &#39;carData&#39; was built under R version 4.4.3</code></pre>
 <pre class="r"><code>library(dplyr)</code></pre>
 <pre><code>## 
 ## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:car&#39;:
+## 
+##     recode</code></pre>
 <pre><code>## The following objects are masked from &#39;package:stats&#39;:
 ## 
 ##     filter, lag</code></pre>
 <pre><code>## The following objects are masked from &#39;package:base&#39;:
 ## 
 ##     intersect, setdiff, setequal, union</code></pre>
-<pre class="r"><code>data(&quot;starwars&quot;)
-head(starwars)</code></pre>
-<pre><code>## # A tibble: 6 × 14
-##   name      height  mass hair_color skin_color eye_color birth_year sex   gender
-##   &lt;chr&gt;      &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; 
-## 1 Luke Sky…    172    77 blond      fair       blue            19   male  mascu…
-## 2 C-3PO        167    75 &lt;NA&gt;       gold       yellow         112   none  mascu…
-## 3 R2-D2         96    32 &lt;NA&gt;       white, bl… red             33   none  mascu…
-## 4 Darth Va…    202   136 none       white      yellow          41.9 male  mascu…
-## 5 Leia Org…    150    49 brown      light      brown           19   fema… femin…
-## 6 Owen Lars    178   120 brown, gr… light      blue            52   male  mascu…
-## # ℹ 5 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;, films &lt;list&gt;,
-## #   vehicles &lt;list&gt;, starships &lt;list&gt;</code></pre>
-</div>
-<div id="dplyrfilter" class="section level1">
-<h1><code>dplyr</code>:<code>filter()</code></h1>
-<ul>
-<li><code>filter()</code> selects a subset of rows in a data frame or
-tibble</li>
-<li><strong>The first argument is always the data frame</strong></li>
-<li>** The second argument (and subsequent) are conditions on variables,
-keeping only rows where the condition is TRUE</li>
-</ul>
-<pre class="r"><code>starwars %&gt;% 
-  filter(species == &quot;Droid&quot;)</code></pre>
-<pre><code>## # A tibble: 6 × 14
-##   name   height  mass hair_color skin_color  eye_color birth_year sex   gender  
-##   &lt;chr&gt;   &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;   
-## 1 C-3PO     167    75 &lt;NA&gt;       gold        yellow           112 none  masculi…
-## 2 R2-D2      96    32 &lt;NA&gt;       white, blue red               33 none  masculi…
-## 3 R5-D4      97    32 &lt;NA&gt;       white, red  red               NA none  masculi…
-## 4 IG-88     200   140 none       metal       red               15 none  masculi…
-## 5 R4-P17     96    NA none       silver, red red, blue         NA none  feminine
-## 6 BB8        NA    NA none       none        black             NA none  masculi…
-## # ℹ 5 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;, films &lt;list&gt;,
-## #   vehicles &lt;list&gt;, starships &lt;list&gt;</code></pre>
-<pre class="r"><code># in base r it would look like:
-subset(starwars, species == &quot;Droid&quot;)</code></pre>
-<pre><code>## # A tibble: 6 × 14
-##   name   height  mass hair_color skin_color  eye_color birth_year sex   gender  
-##   &lt;chr&gt;   &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;   
-## 1 C-3PO     167    75 &lt;NA&gt;       gold        yellow           112 none  masculi…
-## 2 R2-D2      96    32 &lt;NA&gt;       white, blue red               33 none  masculi…
-## 3 R5-D4      97    32 &lt;NA&gt;       white, red  red               NA none  masculi…
-## 4 IG-88     200   140 none       metal       red               15 none  masculi…
-## 5 R4-P17     96    NA none       silver, red red, blue         NA none  feminine
-## 6 BB8        NA    NA none       none        black             NA none  masculi…
-## # ℹ 5 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;, films &lt;list&gt;,
-## #   vehicles &lt;list&gt;, starships &lt;list&gt;</code></pre>
-<pre class="r"><code>#another example
-starwars %&gt;% 
-  filter(skin_color==&quot;light&quot;,
-         eye_color==&quot;brown&quot; &amp;
-           hair_color==&quot;black&quot;)</code></pre>
-<pre><code>## # A tibble: 1 × 14
-##   name      height  mass hair_color skin_color eye_color birth_year sex   gender
-##   &lt;chr&gt;      &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; 
-## 1 Biggs Da…    183    84 black      light      brown             24 male  mascu…
-## # ℹ 5 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;, films &lt;list&gt;,
-## #   vehicles &lt;list&gt;, starships &lt;list&gt;</code></pre>
-</div>
-<div id="dplyr-arrange" class="section level1">
-<h1><code>dplyr</code> : <code>arrange()</code></h1>
-<ul>
-<li><code>arrange()</code> reorders the rows of a data frame or
-tibble</li>
-<li>The first argument is the data frame, followed by one or more column
-names (or expressions) to order by</li>
-<li>If multiple columns are provided, later columns are used to break
-ties in earlier ones</li>
-</ul>
-<pre class="r"><code>starwars %&gt;% 
-  arrange(height, mass)</code></pre>
-<pre><code>## # A tibble: 87 × 14
-##    name     height  mass hair_color skin_color eye_color birth_year sex   gender
-##    &lt;chr&gt;     &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; 
-##  1 Yoda         66    17 white      green      brown            896 male  mascu…
-##  2 Ratts T…     79    15 none       grey, blue unknown           NA male  mascu…
-##  3 Wicket …     88    20 brown      brown      brown              8 male  mascu…
-##  4 Dud Bolt     94    45 none       blue, grey yellow            NA male  mascu…
-##  5 R2-D2        96    32 &lt;NA&gt;       white, bl… red               33 none  mascu…
-##  6 R4-P17       96    NA none       silver, r… red, blue         NA none  femin…
-##  7 R5-D4        97    32 &lt;NA&gt;       white, red red               NA none  mascu…
-##  8 Sebulba     112    40 none       grey, red  orange            NA male  mascu…
-##  9 Gasgano     122    NA none       white, bl… black             NA male  mascu…
-## 10 Watto       137    NA black      blue, grey yellow            NA male  mascu…
-## # ℹ 77 more rows
-## # ℹ 5 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;, films &lt;list&gt;,
-## #   vehicles &lt;list&gt;, starships &lt;list&gt;</code></pre>
-<pre class="r"><code>starwars %&gt;% 
-  arrange(desc(height))</code></pre>
-<pre><code>## # A tibble: 87 × 14
-##    name     height  mass hair_color skin_color eye_color birth_year sex   gender
-##    &lt;chr&gt;     &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; 
-##  1 Yarael …    264    NA none       white      yellow          NA   male  mascu…
-##  2 Tarfful     234   136 brown      brown      blue            NA   male  mascu…
-##  3 Lama Su     229    88 none       grey       black           NA   male  mascu…
-##  4 Chewbac…    228   112 brown      unknown    blue           200   male  mascu…
-##  5 Roos Ta…    224    82 none       grey       orange          NA   male  mascu…
-##  6 Grievous    216   159 none       brown, wh… green, y…       NA   male  mascu…
-##  7 Taun We     213    NA none       grey       black           NA   fema… femin…
-##  8 Rugor N…    206    NA none       green      orange          NA   male  mascu…
-##  9 Tion Me…    206    80 none       grey       black           NA   male  mascu…
-## 10 Darth V…    202   136 none       white      yellow          41.9 male  mascu…
-## # ℹ 77 more rows
-## # ℹ 5 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;, films &lt;list&gt;,
-## #   vehicles &lt;list&gt;, starships &lt;list&gt;</code></pre>
-</div>
-<div id="dplyr-slice" class="section level1">
-<h1><code>dplyr</code>: <code>slice()</code></h1>
-<ul>
-<li>selects rows by their position</li>
-<li>Comes with several helper functions for common use cases:
-<ul>
-<li><code>slice_head()</code>: select the first n rows</li>
-<li><code>slice_tail()</code>: select the last n rows</li>
-</ul></li>
-</ul>
-<pre class="r"><code>starwars %&gt;% 
-  slice(5:10)</code></pre>
-<pre><code>## # A tibble: 6 × 14
-##   name      height  mass hair_color skin_color eye_color birth_year sex   gender
-##   &lt;chr&gt;      &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; 
-## 1 Leia Org…    150    49 brown      light      brown             19 fema… femin…
-## 2 Owen Lars    178   120 brown, gr… light      blue              52 male  mascu…
-## 3 Beru Whi…    165    75 brown      light      blue              47 fema… femin…
-## 4 R5-D4         97    32 &lt;NA&gt;       white, red red               NA none  mascu…
-## 5 Biggs Da…    183    84 black      light      brown             24 male  mascu…
-## 6 Obi-Wan …    182    77 auburn, w… fair       blue-gray         57 male  mascu…
-## # ℹ 5 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;, films &lt;list&gt;,
-## #   vehicles &lt;list&gt;, starships &lt;list&gt;</code></pre>
-<pre class="r"><code>starwars %&gt;% 
-  slice_head(n=8)</code></pre>
-<pre><code>## # A tibble: 8 × 14
-##   name      height  mass hair_color skin_color eye_color birth_year sex   gender
-##   &lt;chr&gt;      &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; 
-## 1 Luke Sky…    172    77 blond      fair       blue            19   male  mascu…
-## 2 C-3PO        167    75 &lt;NA&gt;       gold       yellow         112   none  mascu…
-## 3 R2-D2         96    32 &lt;NA&gt;       white, bl… red             33   none  mascu…
-## 4 Darth Va…    202   136 none       white      yellow          41.9 male  mascu…
-## 5 Leia Org…    150    49 brown      light      brown           19   fema… femin…
-## 6 Owen Lars    178   120 brown, gr… light      blue            52   male  mascu…
-## 7 Beru Whi…    165    75 brown      light      blue            47   fema… femin…
-## 8 R5-D4         97    32 &lt;NA&gt;       white, red red             NA   none  mascu…
-## # ℹ 5 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;, films &lt;list&gt;,
-## #   vehicles &lt;list&gt;, starships &lt;list&gt;</code></pre>
-<pre class="r"><code>starwars %&gt;% 
-  slice_tail(n=5)</code></pre>
-<pre><code>## # A tibble: 5 × 14
-##   name      height  mass hair_color skin_color eye_color birth_year sex   gender
-##   &lt;chr&gt;      &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; 
-## 1 Finn          NA    NA black      dark       dark              NA male  mascu…
-## 2 Rey           NA    NA brown      light      hazel             NA fema… femin…
-## 3 Poe Dame…     NA    NA brown      light      brown             NA male  mascu…
-## 4 BB8           NA    NA none       none       black             NA none  mascu…
-## 5 Captain …     NA    NA none       none       unknown           NA fema… femin…
-## # ℹ 5 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;, films &lt;list&gt;,
-## #   vehicles &lt;list&gt;, starships &lt;list&gt;</code></pre>
-</div>
-<div id="dplyr-select" class="section level1">
-<h1><code>dplyr</code>: <code>select()</code></h1>
-<ul>
-<li>Makes it easy to extract specific columns by name( or whith helper
-functions)</li>
-</ul>
-<pre class="r"><code>starwars %&gt;% 
-  select(name, hair_color, skin_color, eye_color) %&gt;% 
-  slice_head(n=10)</code></pre>
-<pre><code>## # A tibble: 10 × 4
-##    name               hair_color    skin_color  eye_color
-##    &lt;chr&gt;              &lt;chr&gt;         &lt;chr&gt;       &lt;chr&gt;    
-##  1 Luke Skywalker     blond         fair        blue     
-##  2 C-3PO              &lt;NA&gt;          gold        yellow   
-##  3 R2-D2              &lt;NA&gt;          white, blue red      
-##  4 Darth Vader        none          white       yellow   
-##  5 Leia Organa        brown         light       brown    
-##  6 Owen Lars          brown, grey   light       blue     
-##  7 Beru Whitesun Lars brown         light       blue     
-##  8 R5-D4              &lt;NA&gt;          white, red  red      
-##  9 Biggs Darklighter  black         light       brown    
-## 10 Obi-Wan Kenobi     auburn, white fair        blue-gray</code></pre>
-<ul>
-<li>Use <code>!</code> to deselct (drop) columns:</li>
-</ul>
-<pre class="r"><code>starwars %&gt;% 
-  select(!hair_color,! eye_color)</code></pre>
-<pre><code>## # A tibble: 87 × 14
-##    name      height  mass skin_color eye_color birth_year sex   gender homeworld
-##    &lt;chr&gt;      &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;    
-##  1 Luke Sky…    172    77 fair       blue            19   male  mascu… Tatooine 
-##  2 C-3PO        167    75 gold       yellow         112   none  mascu… Tatooine 
-##  3 R2-D2         96    32 white, bl… red             33   none  mascu… Naboo    
-##  4 Darth Va…    202   136 white      yellow          41.9 male  mascu… Tatooine 
-##  5 Leia Org…    150    49 light      brown           19   fema… femin… Alderaan 
-##  6 Owen Lars    178   120 light      blue            52   male  mascu… Tatooine 
-##  7 Beru Whi…    165    75 light      blue            47   fema… femin… Tatooine 
-##  8 R5-D4         97    32 white, red red             NA   none  mascu… Tatooine 
-##  9 Biggs Da…    183    84 light      brown           24   male  mascu… Tatooine 
-## 10 Obi-Wan …    182    77 fair       blue-gray       57   male  mascu… Stewjon  
-## # ℹ 77 more rows
-## # ℹ 5 more variables: species &lt;chr&gt;, films &lt;list&gt;, vehicles &lt;list&gt;,
-## #   starships &lt;list&gt;, hair_color &lt;chr&gt;</code></pre>
-<ul>
-<li>We can use <code>-</code>to extract all except particular
-columns</li>
-</ul>
-<pre class="r"><code>starwars %&gt;% 
-  select(-name, -skin_color)</code></pre>
-<pre><code>## # A tibble: 87 × 12
-##    height  mass hair_color   eye_color birth_year sex   gender homeworld species
-##     &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;  
-##  1    172    77 blond        blue            19   male  mascu… Tatooine  Human  
-##  2    167    75 &lt;NA&gt;         yellow         112   none  mascu… Tatooine  Droid  
-##  3     96    32 &lt;NA&gt;         red             33   none  mascu… Naboo     Droid  
-##  4    202   136 none         yellow          41.9 male  mascu… Tatooine  Human  
-##  5    150    49 brown        brown           19   fema… femin… Alderaan  Human  
-##  6    178   120 brown, grey  blue            52   male  mascu… Tatooine  Human  
-##  7    165    75 brown        blue            47   fema… femin… Tatooine  Human  
-##  8     97    32 &lt;NA&gt;         red             NA   none  mascu… Tatooine  Droid  
-##  9    183    84 black        brown           24   male  mascu… Tatooine  Human  
-## 10    182    77 auburn, whi… blue-gray       57   male  mascu… Stewjon   Human  
-## # ℹ 77 more rows
-## # ℹ 3 more variables: films &lt;list&gt;, vehicles &lt;list&gt;, starships &lt;list&gt;</code></pre>
-<ul>
-<li>We can also specify column positions, or combine column positions
-and names</li>
-</ul>
-<pre class="r"><code>starwars %&gt;% 
-  select(1,2, species) %&gt;% 
-  filter(species==&quot;Droid&quot;) %&gt;% 
-  summarise(species)</code></pre>
-<pre><code>## Warning: Returning more (or less) than 1 row per `summarise()` group was deprecated in
-## dplyr 1.1.0.
-## ℹ Please use `reframe()` instead.
-## ℹ When switching from `summarise()` to `reframe()`, remember that `reframe()`
-##   always returns an ungrouped data frame and adjust accordingly.
-## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-## generated.</code></pre>
-<pre><code>## # A tibble: 6 × 1
-##   species
-##   &lt;chr&gt;  
-## 1 Droid  
-## 2 Droid  
-## 3 Droid  
-## 4 Droid  
-## 5 Droid  
-## 6 Droid</code></pre>
-<p>#<code>dplyr</code>: <code>select()</code> with
-<code>contains()</code> - To select only columns with names containing
-the letter “D”</p>
-<pre class="r"><code>starwars %&gt;% 
-  select(contains(&#39;c&#39;))</code></pre>
-<pre><code>## # A tibble: 87 × 5
-##    hair_color    skin_color  eye_color species vehicles 
-##    &lt;chr&gt;         &lt;chr&gt;       &lt;chr&gt;     &lt;chr&gt;   &lt;list&gt;   
-##  1 blond         fair        blue      Human   &lt;chr [2]&gt;
-##  2 &lt;NA&gt;          gold        yellow    Droid   &lt;chr [0]&gt;
-##  3 &lt;NA&gt;          white, blue red       Droid   &lt;chr [0]&gt;
-##  4 none          white       yellow    Human   &lt;chr [0]&gt;
-##  5 brown         light       brown     Human   &lt;chr [1]&gt;
-##  6 brown, grey   light       blue      Human   &lt;chr [0]&gt;
-##  7 brown         light       blue      Human   &lt;chr [0]&gt;
-##  8 &lt;NA&gt;          white, red  red       Droid   &lt;chr [0]&gt;
-##  9 black         light       brown     Human   &lt;chr [0]&gt;
-## 10 auburn, white fair        blue-gray Human   &lt;chr [1]&gt;
-## # ℹ 77 more rows</code></pre>
-<p>#<code>dplyr</code>: <code>select()</code> with
-<code>starts_with()</code> - <code>starts_with()</code> and
-<code>ends_with()</code> offer more pecificity for
-<code>select()</code></p>
-<pre class="r"><code>starwars %&gt;% 
-  select(starts_with(&#39;n&#39;))</code></pre>
-<pre><code>## # A tibble: 87 × 1
-##    name              
-##    &lt;chr&gt;             
-##  1 Luke Skywalker    
-##  2 C-3PO             
-##  3 R2-D2             
-##  4 Darth Vader       
-##  5 Leia Organa       
-##  6 Owen Lars         
-##  7 Beru Whitesun Lars
-##  8 R5-D4             
-##  9 Biggs Darklighter 
-## 10 Obi-Wan Kenobi    
-## # ℹ 77 more rows</code></pre>
-</div>
-<div id="dplyrrename" class="section level1">
-<h1><code>dplyr</code>:<code>rename()</code></h1>
-<ul>
-<li>changes column names wihtout altering the data</li>
-</ul>
-<pre class="r"><code>#First the name you want, second the current name
-starwars %&gt;% 
-  rename(Character = name)</code></pre>
-<pre><code>## # A tibble: 87 × 14
-##    Character       height  mass hair_color skin_color eye_color birth_year sex  
-##    &lt;chr&gt;            &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;
-##  1 Luke Skywalker     172    77 blond      fair       blue            19   male 
-##  2 C-3PO              167    75 &lt;NA&gt;       gold       yellow         112   none 
-##  3 R2-D2               96    32 &lt;NA&gt;       white, bl… red             33   none 
-##  4 Darth Vader        202   136 none       white      yellow          41.9 male 
-##  5 Leia Organa        150    49 brown      light      brown           19   fema…
-##  6 Owen Lars          178   120 brown, gr… light      blue            52   male 
-##  7 Beru Whitesun …    165    75 brown      light      blue            47   fema…
-##  8 R5-D4               97    32 &lt;NA&gt;       white, red red             NA   none 
-##  9 Biggs Darkligh…    183    84 black      light      brown           24   male 
-## 10 Obi-Wan Kenobi     182    77 auburn, w… fair       blue-gray       57   male 
-## # ℹ 77 more rows
-## # ℹ 6 more variables: gender &lt;chr&gt;, homeworld &lt;chr&gt;, species &lt;chr&gt;,
-## #   films &lt;list&gt;, vehicles &lt;list&gt;, starships &lt;list&gt;</code></pre>
-</div>
-<div id="dplyrmutate" class="section level1">
-<h1><code>dplyr</code>:<code>mutate()</code></h1>
-<ul>
-<li>Add new columns that are function of existing ones</li>
-</ul>
-<pre class="r"><code>newstarwars &lt;- starwars %&gt;% 
-  mutate(height_m = height / 180)
-newstarwars %&gt;% #order of columns 
-  select(height_m, height, everything())</code></pre>
-<pre><code>## # A tibble: 87 × 15
-##    height_m height name    mass hair_color skin_color eye_color birth_year sex  
-##       &lt;dbl&gt;  &lt;int&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;
-##  1    0.956    172 Luke …    77 blond      fair       blue            19   male 
-##  2    0.928    167 C-3PO     75 &lt;NA&gt;       gold       yellow         112   none 
-##  3    0.533     96 R2-D2     32 &lt;NA&gt;       white, bl… red             33   none 
-##  4    1.12     202 Darth…   136 none       white      yellow          41.9 male 
-##  5    0.833    150 Leia …    49 brown      light      brown           19   fema…
-##  6    0.989    178 Owen …   120 brown, gr… light      blue            52   male 
-##  7    0.917    165 Beru …    75 brown      light      blue            47   fema…
-##  8    0.539     97 R5-D4     32 &lt;NA&gt;       white, red red             NA   none 
-##  9    1.02     183 Biggs…    84 black      light      brown           24   male 
-## 10    1.01     182 Obi-W…    77 auburn, w… fair       blue-gray       57   male 
-## # ℹ 77 more rows
-## # ℹ 6 more variables: gender &lt;chr&gt;, homeworld &lt;chr&gt;, species &lt;chr&gt;,
-## #   films &lt;list&gt;, vehicles &lt;list&gt;, starships &lt;list&gt;</code></pre>
-<ul>
-<li>The <code>.keep</code> argument controls which columnsare kept in
-the output</li>
-</ul>
-<pre class="r"><code>newstarwars %&gt;% 
-  mutate(height_m = height/100,
-         .keep = &quot;none&quot;)</code></pre>
-<pre><code>## # A tibble: 87 × 1
-##    height_m
-##       &lt;dbl&gt;
-##  1     1.72
-##  2     1.67
-##  3     0.96
-##  4     2.02
-##  5     1.5 
-##  6     1.78
-##  7     1.65
-##  8     0.97
-##  9     1.83
-## 10     1.82
-## # ℹ 77 more rows</code></pre>
-<p>#<code>dplyr</code>:<code>mutate()</code> with <code>ifelse()</code>
-- Return: - One valuse <strong>if</strong> the condition is “TRUE” -
-Another value <strong>if</strong> the condition is “FALSE” - Syntax:
-<code>ifelse(condition, value_if_true, value_if_false)</code></p>
-<pre class="r"><code>starwars %&gt;% 
-  mutate(height_cat = ifelse(height &gt; 100, &quot;tall&quot;, &quot;small&quot;)) %&gt;% 
-  select (height, height_cat, everything())</code></pre>
-<pre><code>## # A tibble: 87 × 15
-##    height height_cat name        mass hair_color skin_color eye_color birth_year
-##     &lt;int&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt;
-##  1    172 tall       Luke Skyw…    77 blond      fair       blue            19  
-##  2    167 tall       C-3PO         75 &lt;NA&gt;       gold       yellow         112  
-##  3     96 small      R2-D2         32 &lt;NA&gt;       white, bl… red             33  
-##  4    202 tall       Darth Vad…   136 none       white      yellow          41.9
-##  5    150 tall       Leia Orga…    49 brown      light      brown           19  
-##  6    178 tall       Owen Lars    120 brown, gr… light      blue            52  
-##  7    165 tall       Beru Whit…    75 brown      light      blue            47  
-##  8     97 small      R5-D4         32 &lt;NA&gt;       white, red red             NA  
-##  9    183 tall       Biggs Dar…    84 black      light      brown           24  
-## 10    182 tall       Obi-Wan K…    77 auburn, w… fair       blue-gray       57  
-## # ℹ 77 more rows
-## # ℹ 7 more variables: sex &lt;chr&gt;, gender &lt;chr&gt;, homeworld &lt;chr&gt;, species &lt;chr&gt;,
-## #   films &lt;list&gt;, vehicles &lt;list&gt;, starships &lt;list&gt;</code></pre>
-<p>#<code>dplyr</code>: <code>mutate()</code> with <code>ifelse()</code>
-and <code>ggplot2</code> - After creating a new variable, we can quickly
-visualize it with ggplot2</p>
-<pre class="r"><code>library(ggplot2)</code></pre>
-<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.4.3</code></pre>
-<pre class="r"><code>starwars %&gt;% 
-  mutate(height_cat = ifelse(height &gt; 100, &quot;tall&quot;, &quot;small&quot;)) %&gt;% 
-  ggplot(aes(x=height, file=height_cat)) +
-  geom_histogram()+
-  labs(x=&#39;algo&#39;, y=&#39;otro&#39;)</code></pre>
-<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<pre><code>## Warning: Removed 6 rows containing non-finite outside the scale range
-## (`stat_bin()`).</code></pre>
-<p><img role="img" src="data:image/png;base64,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" width="672" /></p>
-<p>#<code>dplyr</code>:<code>summarise()</code>,<code>mean()</code> -
-<code>summarise()</code> collapses a data frame to a single row( or one
-row per group if grouped)&gt; - Useful for computing summary statistics:
-- <code>na.rm=TURE</code> ignores missing values in calculations</p>
-<pre class="r"><code>starwars %&gt;% 
-  summarise(height_cm = mean(height, na.rm=TRUE))</code></pre>
-<pre><code>## # A tibble: 1 × 1
-##   height_cm
-##       &lt;dbl&gt;
-## 1      175.</code></pre>
-<p>#<code>dplyr</code>:<code>summarise()</code>,<code>mean()</code>,<code>min()</code>,<code>max()</code></p>
-<pre class="r"><code>starwars %&gt;% 
-  summarise(mean=mean(height, na.rm=T),
-            min=min(height, na.rm=T),
-            max=max(height, na.rm=T))</code></pre>
-<pre><code>## # A tibble: 1 × 3
-##    mean   min   max
-##   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;
-## 1  175.    66   264</code></pre>
-<p>#<code>dplyr</code>: <code>group_by()</code>,
-<code>summarise()</code> - <code>group_by()</code> defines groups for
-group-wise operations - <code>summarise()</code> then computes summary
-satistics for each group</p>
-<pre class="r"><code>starwars %&gt;% 
-  group_by(species) %&gt;% 
-  summarise(mean_height = mean(height, na.rm=T),
-            sd_height= sd(height, na.rm=T)
-            )</code></pre>
-<pre><code>## # A tibble: 38 × 3
-##    species   mean_height sd_height
-##    &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;
-##  1 Aleena            79       NA  
-##  2 Besalisk         198       NA  
-##  3 Cerean           198       NA  
-##  4 Chagrian         196       NA  
-##  5 Clawdite         168       NA  
-##  6 Droid            131.      49.1
-##  7 Dug              112       NA  
-##  8 Ewok              88       NA  
-##  9 Geonosian        183       NA  
-## 10 Gungan           209.      14.2
-## # ℹ 28 more rows</code></pre>
-<pre class="r"><code>starwars %&gt;% 
-  group_by(homeworld, gender) %&gt;%
-  summarise(mean_height_by_gender = mean(height, na.rm=T),
-            sd_height_by_gender= sd(height, na.rm=T))</code></pre>
-<pre><code>## `summarise()` has grouped output by &#39;homeworld&#39;. You can override using the
-## `.groups` argument.</code></pre>
-<pre><code>## # A tibble: 57 × 4
-## # Groups:   homeworld [49]
-##    homeworld      gender    mean_height_by_gender sd_height_by_gender
-##    &lt;chr&gt;          &lt;chr&gt;                     &lt;dbl&gt;               &lt;dbl&gt;
-##  1 Alderaan       feminine                   150                NA   
-##  2 Alderaan       masculine                  190.                2.12
-##  3 Aleen Minor    masculine                   79                NA   
-##  4 Bespin         masculine                  175                NA   
-##  5 Bestine IV     &lt;NA&gt;                       180                NA   
-##  6 Cato Neimoidia masculine                  191                NA   
-##  7 Cerea          masculine                  198                NA   
-##  8 Champala       masculine                  196                NA   
-##  9 Chandrila      feminine                   150                NA   
-## 10 Concord Dawn   masculine                  183                NA   
-## # ℹ 47 more rows</code></pre>
-</div>
-<div id="dplyr-count" class="section level1">
-<h1><code>dplyr</code>: <code>count()</code></h1>
-<ul>
-<li>takes the name of one or more columns that contain the groups we are
-interested in, and we can optionally sort in order</li>
-</ul>
-<pre class="r"><code>starwars %&gt;% 
-  group_by(species) %&gt;% 
-  count(homeworld, sort = TRUE)</code></pre>
-<pre><code>## # A tibble: 57 × 3
-## # Groups:   species [38]
-##    species  homeworld     n
-##    &lt;chr&gt;    &lt;chr&gt;     &lt;int&gt;
-##  1 Human    Tatooine      8
-##  2 Human    &lt;NA&gt;          6
-##  3 Human    Naboo         5
-##  4 Droid    &lt;NA&gt;          3
-##  5 Gungan   Naboo         3
-##  6 Human    Alderaan      3
-##  7 Droid    Tatooine      2
-##  8 Human    Corellia      2
-##  9 Human    Coruscant     2
-## 10 Kaminoan Kamino        2
-## # ℹ 47 more rows</code></pre>
-<p>#<code>dplyr</code>: <code>sample_n()</code> - randomly selects a
-specified number of rows from a data frame - Useful for exploring a
-subset of a large dataset</p>
-<pre class="r"><code>starwars %&gt;% 
-  sample_n(10)</code></pre>
-<pre><code>## # A tibble: 10 × 14
-##    name     height  mass hair_color skin_color eye_color birth_year sex   gender
-##    &lt;chr&gt;     &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; 
-##  1 Beru Wh…    165    75 brown      light      blue            47   fema… femin…
-##  2 Wat Tam…    193    48 none       green, gr… unknown         NA   male  mascu…
-##  3 Arvel C…     NA    NA brown      fair       brown           NA   male  mascu…
-##  4 Dormé       165    NA brown      light      brown           NA   fema… femin…
-##  5 Palpati…    170    75 grey       pale       yellow          82   male  mascu…
-##  6 Anakin …    188    84 blond      fair       blue            41.9 male  mascu…
-##  7 Ackbar      180    83 none       brown mot… orange          41   male  mascu…
-##  8 San Hill    191    NA none       grey       gold            NA   male  mascu…
-##  9 Shaak Ti    178    57 none       red, blue… black           NA   fema… femin…
-## 10 Lando C…    177    79 black      dark       brown           31   male  mascu…
-## # ℹ 5 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;, films &lt;list&gt;,
-## #   vehicles &lt;list&gt;, starships &lt;list&gt;</code></pre>
-<pre class="r"><code>starwars %&gt;% 
-  sample_n(10,
-           replace=T
-           )</code></pre>
-<pre><code>## # A tibble: 10 × 14
-##    name     height  mass hair_color skin_color eye_color birth_year sex   gender
-##    &lt;chr&gt;     &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; 
-##  1 Wedge A…    170    77 brown      fair       hazel             21 male  mascu…
-##  2 Taun We     213    NA none       grey       black             NA fema… femin…
-##  3 Shmi Sk…    163    NA black      fair       brown             72 fema… femin…
-##  4 BB8          NA    NA none       none       black             NA none  mascu…
-##  5 Wicket …     88    20 brown      brown      brown              8 male  mascu…
-##  6 Plo Koon    188    80 none       orange     black             22 male  mascu…
-##  7 IG-88       200   140 none       metal      red               15 none  mascu…
-##  8 BB8          NA    NA none       none       black             NA none  mascu…
-##  9 Watto       137    NA black      blue, grey yellow            NA male  mascu…
-## 10 Shaak Ti    178    57 none       red, blue… black             NA fema… femin…
-## # ℹ 5 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;, films &lt;list&gt;,
-## #   vehicles &lt;list&gt;, starships &lt;list&gt;</code></pre>
-<p>#<code>dplyr</code> recap - All verbs in <code>dplyr</code> share a
-consisten grammar: - The first argument is always a data.frame (or
-tibble) - The next arguments describe what to do with the columns - You
-can refer to columns directly (no <code>$</code> needed) - The result is
-always a new data frame (tibble)</p>
-<p>msleep %&gt;% filter(awake &gt;= 12)</p>
-<p>msleep %&gt;% mutate(percent_day_awake = (awake / 24) * 100) %&gt;%
-select(percent_day_awake, everything())</p>
-<p>storms %&gt;% group_by(year) %&gt;% summarise(num_storms = n())</p>
-<p>storms %&gt;% filter(wind &gt; 50) %&gt;% arrange(desc(wind))</p>
-<p>lizards %&gt;% group_by(Site, Diameter) %&gt;%
-summarise(total_grahami = sum(grahami)) %&gt;%
-arrange(desc(total_grahami))</p>
-<p>lizards %&gt;% group_by(Time) %&gt;% summarise(avg_opalinus =
-mean(opalinus)) %&gt;% arrange(desc(avg_opalinus))</p>
-</div>
+<pre class="r"><code>library(readr)
+tyre &lt;- read_csv(&quot;tyre.csv&quot;)</code></pre>
+<pre><code>## Rows: 60 Columns: 2
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (1): Brands
+## dbl (1): Mileage
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>head(tyre)</code></pre>
+<pre><code>## # A tibble: 6 × 2
+##   Brands Mileage
+##   &lt;chr&gt;    &lt;dbl&gt;
+## 1 Apollo    33.0
+## 2 Apollo    36.4
+## 3 Apollo    32.8
+## 4 Apollo    37.6
+## 5 Apollo    36.3
+## 6 Apollo    35.9</code></pre>
+<pre class="r"><code>p &lt;- ggplot(tyre, aes(x = Brands, y = Mileage)) + 
+  geom_boxplot(aes(fill=Brands)) +
+  geom_jitter() +
+  #Labels
+  labs(title= &quot;Rendimiento de Gomas en PuertoRico&quot;, x=&quot;Gomas&quot;, y=&quot;Kilometers&quot;) +
+#Themes
+  theme_linedraw() +
+  theme(plot.title = element_text(size = 18,
+                                  face = &quot;bold&quot;,
+                                  hjust = 0.5,
+                                  color = &quot;cornflowerblue&quot;)) + 
+  theme(axis.title.y = element_text(size =18,
+                                    face =&quot;bold&quot;,
+                                    color=&quot;lightblue&quot;),
+        axis.text.y = element_text(size = 16,
+                                   face = &quot;plain&quot;,
+                                   color = &quot;black&quot;)) +
+  theme(axis.title.x = element_text(size = 18,
+                                    face = &quot;bold&quot;,
+                                    color = &quot;blue&quot;),
+        axis.text.x = element_text(size = 16,
+                                   face = &quot;plain&quot;,
+                                   color = &quot;black&quot;)) +
+  theme(legend.title = element_text(size = 18,
+                                    face = &quot;italic&quot;,
+                                    color = &quot;black&quot;)) 
+        
+  
+  
+
+p</code></pre>
+<p><img role="img" src="data:image/png;base64,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" width="672" /></p>
+<p>#Assumption checks</p>
+<pre class="r"><code>mod &lt;- aov(Mileage ~ Brands, data = tyre)
+summary(mod)</code></pre>
+<pre><code>##             Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+## Brands       3  256.3   85.43   17.94 2.78e-08 ***
+## Residuals   56  266.6    4.76                     
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code>residuals_mod &lt;- residuals(mod)
+
+shapiro.test(residuals_mod)</code></pre>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  residuals_mod
+## W = 0.9872, p-value = 0.7826</code></pre>
+<pre class="r"><code>leveneTest(Mileage ~ Brands, data = tyre)</code></pre>
+<pre><code>## Warning in leveneTest.default(y = y, group = group, ...): group coerced to
+## factor.</code></pre>
+<pre><code>## Levene&#39;s Test for Homogeneity of Variance (center = median)
+##       Df F value Pr(&gt;F)
+## group  3  0.6946 0.5592
+##       56</code></pre>
+<pre class="r"><code>#high p value = equal variance</code></pre>
+<pre class="r"><code>post_test &lt;- TukeyHSD(mod)
+post_test</code></pre>
+<pre><code>##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = Mileage ~ Brands, data = tyre)
+## 
+## $Brands
+##                           diff        lwr       upr     p adj
+## Bridgestone-Apollo -3.01900000 -5.1288190 -0.909181 0.0020527
+## CEAT-Apollo        -0.03792661 -2.1477456  2.071892 0.9999608
+## Falken-Apollo       2.82553333  0.7157143  4.935352 0.0043198
+## CEAT-Bridgestone    2.98107339  0.8712544  5.090892 0.0023806
+## Falken-Bridgestone  5.84453333  3.7347143  7.954352 0.0000000
+## Falken-CEAT         2.86345994  0.7536409  4.973279 0.0037424</code></pre>
+<pre class="r"><code>#ggsave(filename=&quot;plot.png&quot;,
+#plot = p,
+#width=8,
+#height=6,
+#dpi=300)</code></pre>
 
 
 
