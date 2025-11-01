@@ -90,3 +90,7 @@ post_test
 
 ```
 
+
+# Graph analysis Description
+
+The data analyzed was named tyre, which captured the mileage different wheel brands have. Through several test I looked for which brand was the most effective (more milage per brand) and if it was significant. I performed a one way anova test and tested for normality of its residuals through the Shapiro test (pvalue = 0.78). Afterwards I tested for Homogeneity of Variance through Levene's Test (pvalue = 0.56). After confirming equal variance and normal distribution of the residuals I performed a Tukey test to determine how significant where the differences in Milage. In sumarry Falken showed superiority over every other brand tested(Falken had a p value lower thatn 0.002 in every comparison.[the value was near 0 when compared to Bridgestone]). In contrast, Bridgestone performed the worst when compared. Between both fell Apollo and CEAT with no significant difference within each other. A final ranking was determined to be: 1. Falken 2. CEAT/Apollo 3. Bridgestone. To better visualize the results; using `ggplot` I graphed a boxplot with a jitter plot. Text size and color was adjusted for the title, axis and legend for better visualization. 
