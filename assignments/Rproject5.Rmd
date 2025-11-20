@@ -1,0 +1,57 @@
+---
+title: "Rtutorial5"
+author: "Gustavo Bertrán"
+date: "`r format(Sys.time(), '%Y-%m-%d %H:%M:%S')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Load libraries
+```{r, warning=FALSE, message=FALSE}
+library(readr)
+library(ggplot2)
+library(janitor)
+```
+
+# Import data
+```{r}
+setwd("~/Intro R/Project R/R-Studio-Workarounds/assignments")
+
+metabric <- read.csv("brca_metabric_clinical_data.csv") %>%
+  clean_names()
+head(metabric[, 1:5]) 
+```
+
+# Create Plot
+```{r, warning = FALSE}
+ggplot(metabric, aes(x = type_of_breast_surgery,
+                     y = tumor_size)) +
+  geom_boxplot(fill="lightblue",
+               alpha = 1)+
+  geom_jitter(fill = "gray",      #added jitter plot to visualize data size
+              alpha = 0.1,  # opacity to remove clutter
+              position = position_jitter(0.35))+  # width to remove clutter
+  #labels
+  labs(title = "Reduction of Tumor Size by procedure", #changed tite clearer interprestation
+       x = "Type of Procedure", # removed underscore
+       y = "Tumor Size")+    # removed underscore
+  #themes
+  theme_bw() + #cleaner theme
+  theme(plot.title = element_text(size = 18,  #better visualization
+                                  face = "bold",
+                                  color = "darkblue",
+                                  hjust = 0.5))+
+  theme(axis.title.y = element_text(size = 18,
+                                    face = "bold",
+                                    color = "darkblue",
+                                    hjust = 0.5))+
+  theme(axis.title.x = element_text(size = 18,
+                                    face = "bold",
+                                    color = "darkblue",
+                                    hjust = 0.5))+
+  theme(legend.position = "none") # removed legend 
+```
+
